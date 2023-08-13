@@ -213,26 +213,50 @@ public class HJsonPsiImplUtils {
             PsiFile file = literal.getContainingFile();
 
             if (file != null) {
-                int offset = literal.getTextOffset();
-                int lineOffset = offset - StringUtil.lastIndexOf(file.getText(), '\n', 0, offset) - 1;
-                String[] lines = literal.getText().split("\n");
-                String[] newLines = new String[lines.length];
-                newLines[0] = lines[0];
-                for (int i = 1; i < lines.length; i++) {
-                    String line = lines[i];
-                    Matcher matcher = nonSpacePattern.matcher(line);
-                    int foundIndex = line.length() - 1;
-                    if (matcher.find()) {
-                        foundIndex = matcher.start();
-                    }
-                    newLines[i] = line.substring(Math.min(lineOffset, foundIndex));
-                }
-                return String.join("\n", newLines);
+                return getMultilineString(file.getText(), literal.getTextOffset(), literal.getText());
             }
 
         }
         return StringUtil.unescapeStringCharacters(HJsonPsiUtil.stripQuotes(literal.getText()));
 
+    }
+
+    @NotNull
+    public static String getMultilineString(String fileText, int offset, String myText) {
+        int lineOffset = offset - StringUtil.lastIndexOf(fileText, '\n', 0, offset) - 1;
+        String[] lines = myText.split("\n");
+        int newLen = lines.length;
+        int startOffset = 1;
+        if (lines.length > 0 && lines[lines.length - 1].matches("\\s+'''")) {
+            newLen -= 1;
+        }
+        if (lines.length > 1 && lines[0].equals("'''")) {
+            newLen -= 1;
+//            startOffset = 0;
+        }
+        String[] newLines = new String[newLen];
+
+        if (startOffset == 1) {
+            newLines[0] = lines[0].substring(3);
+        }
+        for (int i = 0; i < newLines.length; i++) {
+            String line = lines[i+startOffset];
+            Matcher matcher = nonSpacePattern.matcher(line);
+            int foundIndex = line.length() - 1;
+            if (matcher.find()) {
+                foundIndex = matcher.start();
+            }
+            int endIndex = line.length();
+            int startIndex = Math.min(lineOffset, foundIndex);
+            boolean isLast = i + 1 == lines.length;
+            if (isLast && line.endsWith("'''")) {
+                endIndex -= 3;
+                if (startIndex == endIndex) continue;
+            }
+            newLines[i] = line.substring(startIndex, endIndex);
+
+        }
+        return String.join("\n", newLines);
     }
 
     /*public static boolean isPropertyName(@NotNull HJsonStringLiteral literal) {

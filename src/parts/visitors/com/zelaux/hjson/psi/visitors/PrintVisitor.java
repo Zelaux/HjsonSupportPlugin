@@ -4,7 +4,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.zelaux.hjson.psi.*;
 import com.zelaux.hjson.psi.impl.HJsonRecursiveElementVisitor;
-import com.zelaux.hjson.utils.IndentStream;
+import com.zelaux.hjson.util.IndentStream;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
@@ -70,13 +70,11 @@ public class PrintVisitor extends HJsonRecursiveElementVisitor {
     public void visitMultilineString(@NotNull HJsonMultilineString o) {
 
         String[] split = o.getValue().split("\n");
-
-        for (int i = 0; i < split.length - 1; i++) {
+        stream.println("'''");
+        for (int i = 0; i < split.length; i++) {
             stream.println(split[i]);
         }
-        if(split.length>0){
-            stream.print(split[split.length-1]);
-        }
+        stream.print("'''");
     }
 
     @Override

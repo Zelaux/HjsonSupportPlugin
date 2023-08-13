@@ -33,7 +33,36 @@
         <lang.braceMatcher  language="HJSON" implementationClass="com.zelaux.hjson.HJsonBraceMatcher"/>
         <quoteHandler fileType="HJSON" className="com.zelaux.hjson.HJsonQuoteHandler"/>
 
+        <!-- Codeinsight -->
+        <breadcrumbsInfoProvider implementation="com.zelaux.hjson.breadcrumbs.HJsonBreadcrumbsProvider"/>
+        <!--TODO QUALIFIED NAME-->
+        <completion.contributor language="HJSON" id="HJsonCompletionContributor" order="last" implementationClass="com.zelaux.hjson.codeinsight.HJsonCompletionContributor"/>
+        <!--TODO    <lang.psiStructureViewFactory language="JSON" implementationClass="com.intellij.json.structureView.JsonStructureViewBuilderFactory"/>-->
+        <lang.foldingBuilder language="HJSON" implementationClass="com.zelaux.hjson.editor.folding.HJsonFoldingBuilder"/>
+        <lang.smartEnterProcessor language="HJSON" implementationClass="com.zelaux.hjson.editor.smartEnter.HJsonSmartEnterProcessor"/>
+        <lang.namesValidator language="HJSON" implementationClass="com.zelaux.hjson.HJsonNamesValidator"/>
+        <lang.commenter language="HJSON" implementationClass="com.intellij.json.editor.JsonCommenter"/>
+<!--TODO        <lang.surroundDescriptor language="JSON" implementationClass="com.intellij.json.surroundWith.JsonSurroundDescriptor"/>-->
+        <!--TODO <lang.findUsagesProvider language="JSON" implementationClass="com.intellij.json.findUsages.JsonFindUsagesProvider"/>-->
+        <statementUpDownMover implementation="com.zelaux.hjson.editor.lineMover.HJsonLineMover" id="HJSON" order="before line"/>
+        <!--TODO  <liveTemplateContext implementation="com.intellij.json.liveTemplates.JsonContextType"/>
+    <liveTemplateContext implementation="com.intellij.json.liveTemplates.JsonInLiteralsContextType"/>
+    <liveTemplateContext implementation="com.intellij.json.liveTemplates.JsonInPropertyKeysContextType"/>-->
+        <spellchecker.support language="HJSON" implementationClass="com.zelaux.hjson.HJsonSpellcheckerStrategy"/>
+        <extendWordSelectionHandler implementation="com.zelaux.hjson.editor.selection.HJsonStringLiteralSelectionHandler"/>
+
         <!--Annotator-->
         <annotator language="HJSON" implementationClass="com.zelaux.hjson.codeinsight.HJsonLiteralAnnotator"/>
+
+        <!-- Inspections -->
+
+        <!--Other-->
+        <!--TODO <lang.elementManipulator forClass="com.zelaux.hjson.psi.HJsonStringLiteral" implementationClass="com.zelaux.hjson.psi.HJsonStringLiteralManipulator"/>-->
+        <lang.lineWrapStrategy language="HJSON" implementationClass="com.zelaux.hjson.formatter.HJsonLineWrapPositionStrategy"/>
+        <copyPastePostProcessor implementation="com.zelaux.hjson.editor.HJsonCopyPastePostProcessor"/>
+        <highlightVisitor implementation="com.zelaux.hjson.highlighting.HJsonRainbowVisitor"/>
+
+        <!--EXTRA-->
+        <navbar implementation="com.zelaux.hjson.structureView.HJsonStructureAwareNavbar"/>
     </extensions>
 </idea-plugin>

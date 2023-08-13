@@ -29,7 +29,8 @@ public class HJsonQuoteHandler extends SimpleTokenSetQuoteHandler implements Mul
             if (index >= 0) {
                 return String.valueOf(iterator.getDocument().getCharsSequence().charAt(index));
             }
-        }
+        }//DONT WORK FOR '''
+
         return tokenType == HJsonElementTypes.SINGLE_QUOTED_STRING ? "'" : (tokenType == HJsonElementTypes.DOUBLE_QUOTED_STRING ? "\"" : "'''");
     }
 

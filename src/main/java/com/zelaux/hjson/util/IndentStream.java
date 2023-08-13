@@ -1,4 +1,4 @@
-package com.zelaux.hjson.utils;
+package com.zelaux.hjson.util;
 
 import kotlin.collections.ArraysKt;
 import kotlin.jvm.internal.Intrinsics;

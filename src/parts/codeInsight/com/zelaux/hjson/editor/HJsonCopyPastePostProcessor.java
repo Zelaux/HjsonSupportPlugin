@@ -1,0 +1,174 @@
+package com.zelaux.hjson.editor;
+
+import com.intellij.codeInsight.editorActions.CopyPastePostProcessor;
+import com.intellij.codeInsight.editorActions.TextBlockTransferableData;
+import com.intellij.ide.scratch.ScratchUtil;
+import com.intellij.json.editor.JsonEditorOptions;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.RangeMarker;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.source.tree.LeafPsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.containers.ContainerUtil;
+import com.zelaux.hjson.HJsonElementTypes;
+import com.zelaux.hjson.HJsonFileType;
+import com.zelaux.hjson.psi.HJsonArray;
+import com.zelaux.hjson.psi.HJsonFile;
+import com.zelaux.hjson.psi.HJsonMember;
+import com.zelaux.hjson.psi.HJsonValue;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.util.Collections;
+import java.util.List;
+
+public class HJsonCopyPastePostProcessor extends CopyPastePostProcessor<TextBlockTransferableData> {
+    static final List<TextBlockTransferableData> DATA_LIST = Collections.singletonList(new HJsonCopyPastePostProcessor.DumbData());
+    static class DumbData implements TextBlockTransferableData {
+        private static final DataFlavor DATA_FLAVOR = new DataFlavor(HJsonCopyPastePostProcessor.class, "class: JsonCopyPastePostProcessor");
+        @Override
+        public DataFlavor getFlavor()  {
+            return  DATA_FLAVOR;
+        }
+
+        @Override
+        public int getOffsetCount() {
+            return 0;
+        }
+
+        @Override
+        public int getOffsets(int[] offsets, int index) {
+            return index;
+        }
+
+        @Override
+        public int setOffsets(int[] offsets, int index) {
+            return index;
+        }
+    }
+
+    @NotNull
+    @Override
+    public List<TextBlockTransferableData> collectTransferableData(@NotNull PsiFile file, @NotNull Editor editor, int @NotNull [] startOffsets, int @NotNull [] endOffsets) {
+        return ContainerUtil.emptyList();
+    }
+
+    @NotNull
+    @Override
+    public List<TextBlockTransferableData> extractTransferableData(@NotNull Transferable content) {
+        // if this list is empty, processTransferableData won't be called
+        return DATA_LIST;
+    }
+
+    @Override
+    public void processTransferableData(@NotNull Project project,
+                                        @NotNull Editor editor,
+                                        @NotNull RangeMarker bounds,
+                                        int caretOffset,
+                                        @NotNull Ref<? super Boolean> indented,
+                                        @NotNull List<? extends TextBlockTransferableData> values) {
+        fixCommasOnPaste(project, editor, bounds);
+    }
+
+    private static void fixCommasOnPaste(@NotNull Project project, @NotNull Editor editor, @NotNull RangeMarker bounds) {
+        if (!JsonEditorOptions.getInstance().COMMA_ON_PASTE) return;
+
+        if (!isJsonEditor(project, editor)) return;
+
+        final PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
+        manager.commitDocument(editor.getDocument());
+        final PsiFile psiFile = manager.getPsiFile(editor.getDocument());
+        if (psiFile == null) return;
+        fixTrailingComma(bounds, psiFile, manager);
+        fixLeadingComma(bounds, psiFile, manager);
+    }
+
+    private static boolean isJsonEditor(@NotNull Project project,
+                                        @NotNull Editor editor) {
+        final VirtualFile file = FileDocumentManager.getInstance().getFile(editor.getDocument());
+        if (file == null) return false;
+        final FileType fileType = file.getFileType();
+        if (fileType instanceof HJsonFileType) return true;
+        if (!ScratchUtil.isScratch(file)) return false;
+        return PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument()) instanceof HJsonFile;
+    }
+
+    private static void fixLeadingComma(@NotNull RangeMarker bounds, @NotNull PsiFile psiFile, @NotNull PsiDocumentManager manager) {
+        final PsiElement startElement = skipWhitespaces(psiFile.findElementAt(bounds.getStartOffset()));
+        PsiElement propertyOrArrayItem = startElement instanceof HJsonMember ? startElement : getParentPropertyOrArrayItem(startElement);
+
+        if (propertyOrArrayItem == null) return;
+
+        PsiElement prevSibling = PsiTreeUtil.skipWhitespacesBackward(propertyOrArrayItem);
+        if (prevSibling instanceof PsiErrorElement) {
+            final int offset = prevSibling.getTextRange().getEndOffset();
+            ApplicationManager.getApplication().runWriteAction(() -> bounds.getDocument().insertString(offset, ","));
+            manager.commitDocument(bounds.getDocument());
+        }
+    }
+
+    @Nullable
+    private static PsiElement getParentPropertyOrArrayItem(@Nullable PsiElement startElement) {
+        PsiElement propertyOrArrayItem = PsiTreeUtil.getParentOfType(startElement, HJsonMember.class, HJsonArray.class);
+        if (propertyOrArrayItem instanceof HJsonArray) {
+            for (HJsonValue value : ((HJsonArray)propertyOrArrayItem).getValueList()) {
+                if (PsiTreeUtil.isAncestor(value, startElement, false)) {
+                    return value;
+                }
+            }
+            return null;
+        }
+        return propertyOrArrayItem;
+    }
+
+    private static void fixTrailingComma(@NotNull RangeMarker bounds, @NotNull PsiFile psiFile, @NotNull PsiDocumentManager manager) {
+        PsiElement endElement = skipWhitespaces(psiFile.findElementAt(bounds.getEndOffset() - 1));
+        if (endElement != null && endElement.getTextOffset() >= bounds.getEndOffset()) {
+            endElement = PsiTreeUtil.skipWhitespacesBackward(endElement);
+        }
+
+        if (endElement instanceof LeafPsiElement && ((LeafPsiElement)endElement).getElementType() == HJsonElementTypes.COMMA) {
+            final PsiElement nextNext = skipWhitespaces(endElement.getNextSibling());
+            if (nextNext instanceof LeafPsiElement && (((LeafPsiElement)nextNext).getElementType() == HJsonElementTypes.R_CURLY ||
+                    ((LeafPsiElement)nextNext).getElementType() == HJsonElementTypes.R_BRACKET)) {
+                PsiElement finalEndElement = endElement;
+                ApplicationManager.getApplication().runWriteAction(() -> finalEndElement.delete());
+            }
+        }
+        else {
+            final PsiElement property = getParentPropertyOrArrayItem(endElement);
+            if (endElement instanceof PsiErrorElement || property != null && skipWhitespaces(property.getNextSibling()) instanceof PsiErrorElement) {
+                PsiElement finalEndElement1 = endElement;
+                ApplicationManager.getApplication().runWriteAction(() -> bounds.getDocument().insertString(getOffset(property, finalEndElement1), ","));
+                manager.commitDocument(bounds.getDocument());
+            }
+        }
+    }
+
+    private static int getOffset(@Nullable PsiElement property, @Nullable PsiElement finalEndElement1) {
+        if (finalEndElement1 instanceof PsiErrorElement) return finalEndElement1.getTextOffset();
+        assert finalEndElement1 != null;
+        return property != null ? property.getTextRange().getEndOffset() : finalEndElement1.getTextOffset();
+    }
+
+    @Nullable
+    private static PsiElement skipWhitespaces(@Nullable PsiElement element) {
+        while (element instanceof PsiWhiteSpace) {
+            element = element.getNextSibling();
+        }
+        return element;
+    }
+
+    @Override
+    public boolean requiresAllDocumentsToBeCommitted(@NotNull Editor editor, @NotNull Project project) {
+        return false;
+    }
+}

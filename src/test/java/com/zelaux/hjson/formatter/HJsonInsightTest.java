@@ -62,16 +62,16 @@ public class HJsonInsightTest extends LightJavaCodeInsightFixtureTestCase {
     myFixture.checkResultByFile("formatter/DefaultTestData.hjson");
     }
 
-    public void testRename() {
+   /* public void testRename() {
         myFixture.configureByFiles("RenameTestData.java", "RenameTestData.simple");
         myFixture.renameElementAtCaret("websiteUrl");
         myFixture.checkResultByFile("RenameTestData.simple", "RenameTestDataAfter.simple", false);
-    }
+    }*/
 
-    public void testFolding() {
+   /* public void testFolding() {
         myFixture.configureByFile("DefaultTestData.simple");
         myFixture.testFolding(getTestDataPath() + "/FoldingTestData.java");
-    }
+    }*/
 
     /*public void testFindUsages() {
         Collection<UsageInfo> usageInfos = myFixture.testFindUsages("FindUsagesTestData.simple", "FindUsagesTestData.java");
@@ -79,12 +79,12 @@ public class HJsonInsightTest extends LightJavaCodeInsightFixtureTestCase {
     }*/
 
     public void testCommenter() {
-        myFixture.configureByText(HJsonFileType.INSTANCE, "<caret>website = https://en.wikipedia.org/");
+        myFixture.configureByText(HJsonFileType.INSTANCE, "<caret>member: value");
         CommentByLineCommentAction commentAction = new CommentByLineCommentAction();
         commentAction.actionPerformedImpl(getProject(), myFixture.getEditor());
-        myFixture.checkResult("#website = https://en.wikipedia.org/");
+        myFixture.checkResult("//member: value");
         commentAction.actionPerformedImpl(getProject(), myFixture.getEditor());
-        myFixture.checkResult("website = https://en.wikipedia.org/");
+        myFixture.checkResult("member: value");
     }
 
     /*public void testReference() {

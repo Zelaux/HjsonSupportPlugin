@@ -121,9 +121,9 @@ public class _HJsonLexer implements FlexLexer {
     "\1\0\1\1\1\2\1\3\1\1\1\4\1\5\1\6"+
     "\1\7\1\10\1\11\1\6\1\12\3\1\1\13\1\14"+
     "\1\0\2\15\1\0\2\16\2\17\1\0\1\20\2\0"+
-    "\1\21\1\0\3\1\1\17\2\0\1\7\1\0\1\7"+
-    "\1\0\3\1\1\0\1\20\1\0\1\1\1\22\1\23"+
-    "\2\0\1\24\1\25";
+    "\1\21\1\0\3\1\1\17\1\22\1\0\1\7\1\0"+
+    "\1\7\1\0\3\1\1\0\1\20\1\0\1\1\1\23"+
+    "\1\24\2\0\1\25\1\22";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[55];
@@ -273,9 +273,9 @@ public class _HJsonLexer implements FlexLexer {
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
     "\1\0\5\1\1\11\2\1\2\11\1\1\1\11\3\1"+
     "\2\11\1\0\1\1\1\11\1\0\4\1\1\0\1\1"+
-    "\2\0\1\11\1\0\3\1\1\11\2\0\1\1\1\0"+
-    "\1\1\1\0\3\1\1\0\1\11\1\0\3\1\2\0"+
-    "\1\1\1\11";
+    "\2\0\1\11\1\0\3\1\1\11\1\1\1\0\1\1"+
+    "\1\0\1\1\1\0\3\1\1\0\1\11\1\0\3\1"+
+    "\2\0\1\1\1\11";
 
   private static int [] zzUnpackAttribute() {
     int [] result = new int[55];
@@ -678,22 +678,22 @@ public class _HJsonLexer implements FlexLexer {
           // fall through
           case 38: break;
           case 18:
-            { return NULL;
+            { return MULTILINE_STRING_TOKEN;
             }
           // fall through
           case 39: break;
           case 19:
-            { return TRUE;
+            { return NULL;
             }
           // fall through
           case 40: break;
           case 20:
-            { return FALSE;
+            { return TRUE;
             }
           // fall through
           case 41: break;
           case 21:
-            { return MULTILINE_STRING_TOKEN;
+            { return FALSE;
             }
           // fall through
           case 42: break;
