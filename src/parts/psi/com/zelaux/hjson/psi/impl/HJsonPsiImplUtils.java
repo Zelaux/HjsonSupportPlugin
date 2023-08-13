@@ -11,6 +11,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.PlatformIcons;
 import com.zelaux.hjson.HJsonLanguage;
@@ -23,20 +24,23 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HJsonPsiImplUtils {
     static final Key<List<Pair<TextRange, String>>> STRING_FRAGMENTS = new Key<>("JSON string fragments");
+    static final Pattern nonSpacePattern = Pattern.compile("[^ ]");
     private static final String ourEscapesTable = "\"\"\\\\//b\bf\fn\nr\rt\t";
 
     @NotNull
     public static String getName(@NotNull HJsonMember property) {
         return property.getMemberName().getName();
     }
+
     @NotNull
     public static String getName(@NotNull HJsonMemberName memberName) {
         return StringUtil.unescapeStringCharacters(HJsonPsiUtil.stripQuotes(memberName.getNameElement().getText()));
     }
-
 
     /**
      * Actually only JSON string literal should be accepted as valid name of property according to standard,
@@ -205,7 +209,30 @@ public class HJsonPsiImplUtils {
 
     @NotNull
     public static String getValue(@NotNull HJsonStringLiteral literal) {
+        if (literal instanceof HJsonMultilineString) {
+            PsiFile file = literal.getContainingFile();
+
+            if (file != null) {
+                int offset = literal.getTextOffset();
+                int lineOffset = offset - StringUtil.lastIndexOf(file.getText(), '\n', 0, offset) - 1;
+                String[] lines = literal.getText().split("\n");
+                String[] newLines = new String[lines.length];
+                newLines[0] = lines[0];
+                for (int i = 1; i < lines.length; i++) {
+                    String line = lines[i];
+                    Matcher matcher = nonSpacePattern.matcher(line);
+                    int foundIndex = line.length() - 1;
+                    if (matcher.find()) {
+                        foundIndex = matcher.start();
+                    }
+                    newLines[i] = line.substring(Math.min(lineOffset, foundIndex));
+                }
+                return String.join("\n", newLines);
+            }
+
+        }
         return StringUtil.unescapeStringCharacters(HJsonPsiUtil.stripQuotes(literal.getText()));
+
     }
 
     /*public static boolean isPropertyName(@NotNull HJsonStringLiteral literal) {

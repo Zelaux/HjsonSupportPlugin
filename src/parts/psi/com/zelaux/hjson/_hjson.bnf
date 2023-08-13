@@ -67,7 +67,7 @@ comment::= (LINE_COMMENT NEW_LINE) | BLOCK_COMMENT
 object_full::= '{' object? '}'{
     extends=object
 }
-object::=(member (separator member)* separator?)?{
+object::=(member (COMMA? member)* COMMA?)?{
   pin=1
   methods=[
     findMember
@@ -97,7 +97,7 @@ member_value::=value{
     extends=value
 }
 
-array::= '['( value ( separator value)* separator? )? ']'{
+array::= '['( value ( COMMA? value)* COMMA? )? ']'{
 //  recoverWhile = not_bracket_or_next_value
     //pin=1
 }

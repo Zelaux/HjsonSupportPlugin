@@ -23,7 +23,7 @@ import static com.zelaux.hjson.HJsonElementTypes.*;
 %unicode
 
 EOL=\R
-WHITE_SPACE=[\f\r\t\v\n ]+
+WHITE_SPACE=[\s]+
 
 LINE_COMMENT=("//"|#).*
 BLOCK_COMMENT="/"\*([^*]|\*+[^*/])*(\*+"/")?

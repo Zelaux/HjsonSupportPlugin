@@ -194,4 +194,8 @@ public class IndentStream extends PrintStream {
         wasNextLine = false;
         indentAmount = 0;
     }
+
+    public int currentIndent() {
+        return indentAmount;
+    }
 }

@@ -11,8 +11,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 public class PrintVisitor extends HJsonRecursiveElementVisitor {
-    private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    final IndentStream stream = new IndentStream(new PrintStream(outputStream));
+    private final ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+    private final PrintStream rawStream = new PrintStream(byteOutputStream);
+    final IndentStream stream = new IndentStream(rawStream);
     public boolean arrayComma = true;
     public boolean objectComma = true;
 
@@ -59,10 +60,23 @@ public class PrintVisitor extends HJsonRecursiveElementVisitor {
         HJsonObject object = o.getObject();
         if (object != null) {
             object.accept(this);
-        }else{
+        } else {
             stream.print("{}");
         }
 
+    }
+
+    @Override
+    public void visitMultilineString(@NotNull HJsonMultilineString o) {
+
+        String[] split = o.getValue().split("\n");
+
+        for (int i = 0; i < split.length - 1; i++) {
+            stream.println(split[i]);
+        }
+        if(split.length>0){
+            stream.print(split[split.length-1]);
+        }
     }
 
     @Override
@@ -89,11 +103,11 @@ public class PrintVisitor extends HJsonRecursiveElementVisitor {
     }
 
     public String getString() {
-        return outputStream.toString();
+        return byteOutputStream.toString();
     }
 
     public void reset() {
-        outputStream.reset();
+        byteOutputStream.reset();
         stream.reset();
     }
 }

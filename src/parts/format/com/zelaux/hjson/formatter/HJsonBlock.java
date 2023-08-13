@@ -108,7 +108,7 @@ public class HJsonBlock  implements ASTBlock {
             if (hasElementType(childNode, COMMA)) {
                 wrap = Wrap.createWrap(WrapType.NONE, true);
             }
-            else if (!hasElementType(childNode, JSON_ALL_BRACES)) {
+            else if (!hasElementType(childNode, JSON_ALL_BRACES)){
                 assert myChildWrap != null;
                 wrap = myChildWrap;
                 indent = Indent.getNormalIndent();

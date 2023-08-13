@@ -8,9 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface HJsonArray extends HJsonValue {
 
   @NotNull
-  List<HJsonSeparator> getSeparatorList();
-
-  @NotNull
   List<HJsonValue> getValueList();
 
 }

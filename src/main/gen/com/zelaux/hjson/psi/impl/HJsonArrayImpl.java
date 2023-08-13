@@ -29,12 +29,6 @@ public class HJsonArrayImpl extends HJsonValueImpl implements HJsonArray {
 
   @Override
   @NotNull
-  public List<HJsonSeparator> getSeparatorList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, HJsonSeparator.class);
-  }
-
-  @Override
-  @NotNull
   public List<HJsonValue> getValueList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, HJsonValue.class);
   }

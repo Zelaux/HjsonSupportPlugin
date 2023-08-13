@@ -13,6 +13,7 @@
         },
         three: 2,
     },
+    version: 0.0,
     boolean: false,
     boolean2: true,
     number: 013213e-1,
@@ -20,5 +21,18 @@
         "double_quoted",
         'single_quoted',
         no_qouted,
+    ],
+    name: {
+        obj: it,
+    },
+    field: 123,
+    array: [
+        123,
+        "bvad",
+        dawd,
+        'ddawd',
+        '''
+        multiline
+        ''',
     ],
 }

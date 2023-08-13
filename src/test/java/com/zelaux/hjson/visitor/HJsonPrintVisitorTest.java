@@ -25,6 +25,7 @@ public class HJsonPrintVisitorTest extends ParsingTestCase {
 
             PrintVisitor visitor = new PrintVisitor();
             HJsonFileImpl file = (HJsonFileImpl) parseFile(name, loadFile(name + "." + myFileExt));
+            ensureNoErrorElements();
             file.accept(visitor);
             String visitorString = visitor.getString().replace("\r\n", "\n");
             visitor.reset();

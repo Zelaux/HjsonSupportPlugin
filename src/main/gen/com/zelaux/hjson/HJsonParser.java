@@ -43,7 +43,7 @@ public class HJsonParser implements PsiParser, LightPsiParser {
   };
 
   /* ********************************************************** */
-  // '['( value ( separator value)* separator? )? ']'{
+  // '['( value ( COMMA? value)* COMMA? )? ']'{
   // //  recoverWhile = not_bracket_or_next_value
   //     //pin=1
   // }
@@ -60,14 +60,14 @@ public class HJsonParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ( value ( separator value)* separator? )?
+  // ( value ( COMMA? value)* COMMA? )?
   private static boolean array_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "array_1")) return false;
     array_1_0(b, l + 1);
     return true;
   }
 
-  // value ( separator value)* separator?
+  // value ( COMMA? value)* COMMA?
   private static boolean array_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "array_1_0")) return false;
     boolean r;
@@ -79,7 +79,7 @@ public class HJsonParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ( separator value)*
+  // ( COMMA? value)*
   private static boolean array_1_0_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "array_1_0_1")) return false;
     while (true) {
@@ -90,21 +90,28 @@ public class HJsonParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // separator value
+  // COMMA? value
   private static boolean array_1_0_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "array_1_0_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = separator(b, l + 1);
+    r = array_1_0_1_0_0(b, l + 1);
     r = r && value(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // separator?
+  // COMMA?
+  private static boolean array_1_0_1_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "array_1_0_1_0_0")) return false;
+    consumeToken(b, COMMA);
+    return true;
+  }
+
+  // COMMA?
   private static boolean array_1_0_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "array_1_0_2")) return false;
-    separator(b, l + 1);
+    consumeToken(b, COMMA);
     return true;
   }
 
@@ -302,7 +309,7 @@ public class HJsonParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (member (separator member)* separator?)?
+  // (member (COMMA? member)* COMMA?)?
   public static boolean object(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "object")) return false;
     Marker m = enter_section_(b, l, _NONE_, OBJECT, "<object>");
@@ -311,7 +318,7 @@ public class HJsonParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // member (separator member)* separator?
+  // member (COMMA? member)* COMMA?
   private static boolean object_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "object_0")) return false;
     boolean r;
@@ -323,7 +330,7 @@ public class HJsonParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (separator member)*
+  // (COMMA? member)*
   private static boolean object_0_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "object_0_1")) return false;
     while (true) {
@@ -334,21 +341,28 @@ public class HJsonParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // separator member
+  // COMMA? member
   private static boolean object_0_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "object_0_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = separator(b, l + 1);
+    r = object_0_1_0_0(b, l + 1);
     r = r && member(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // separator?
+  // COMMA?
+  private static boolean object_0_1_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "object_0_1_0_0")) return false;
+    consumeToken(b, COMMA);
+    return true;
+  }
+
+  // COMMA?
   private static boolean object_0_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "object_0_2")) return false;
-    separator(b, l + 1);
+    consumeToken(b, COMMA);
     return true;
   }
 

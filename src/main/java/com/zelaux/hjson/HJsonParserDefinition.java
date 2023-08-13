@@ -25,7 +25,7 @@ public class HJsonParserDefinition implements ParserDefinition {
 
     public static final TokenSet HJSON_BRACES = TokenSet.create(L_CURLY, R_CURLY);
     public static final TokenSet HJSON_BRACKETS = TokenSet.create(L_BRACKET, R_BRACKET);
-    public static final TokenSet HJSON_CONTAINERS = TokenSet.create(OBJECT, ARRAY);
+    public static final TokenSet HJSON_CONTAINERS = TokenSet.create(OBJECT_FULL, ARRAY);
     public static final TokenSet HJSON_BOOLEANS = TokenSet.create(TRUE, FALSE);
     public static final TokenSet HJSON_KEYWORDS = TokenSet.create(TRUE, FALSE, NULL);
     public static final TokenSet HJSON_LITERALS = TokenSet.create(STRING_LITERAL, NUMBER_LITERAL, NULL_LITERAL, TRUE, FALSE);

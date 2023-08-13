@@ -35,12 +35,6 @@ public class HJsonObjectImpl extends HJsonObjectMixin implements HJsonObject {
   }
 
   @Override
-  @NotNull
-  public List<HJsonSeparator> getSeparatorList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, HJsonSeparator.class);
-  }
-
-  @Override
   public @Nullable ItemPresentation getPresentation() {
     return HJsonPsiImplUtils.getPresentation(this);
   }

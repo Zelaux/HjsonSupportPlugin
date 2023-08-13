@@ -28,7 +28,7 @@ intellij {
 
 //    plugins.set(listOf(/* Plugin Dependencies */))
     plugins.set(listOf(
-//            "java",
+            "java",
 //            "org.jetbrains.kotlin:222-1.8.21-release-380-IJ4167.29",
             "org.intellij.intelliLang",
             /*"DevKit",*/
