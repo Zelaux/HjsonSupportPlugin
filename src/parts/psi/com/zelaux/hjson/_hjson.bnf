@@ -1,0 +1,145 @@
+{
+    parserClass = 'com.zelaux.hjson.HJsonParser'
+    parserUtilClass = "com.zelaux.hjson.psi.HJsonParserUtil"
+    psiPackage = 'com.zelaux.hjson.psi'
+    psiImplPackage = 'com.zelaux.hjson.psi.impl'
+
+    elementTypeHolderClass = 'com.zelaux.hjson.HJsonElementTypes'
+    elementTypeClass = 'com.zelaux.hjson.HJsonElementType'
+    psiClassPrefix = "HJson"
+    psiVisitorName = "HJsonElementVisitor"
+
+    psiImplUtilClass = 'com.zelaux.hjson.psi.impl.HJsonPsiImplUtils'
+    tokenTypeClass = 'com.zelaux.hjson.HJsonTokenType'
+
+    implements("value") = "com.zelaux.hjson.psi.HJsonElement"
+    extends("value") = "com.zelaux.hjson.psi.impl.HJsonElementImpl"
+    tokens=[
+        L_CURLY='{'
+        R_CURLY='}'
+        L_BRACKET='['
+        R_BRACKET=']'
+        SINGLE_QUOTE="'"
+        DOUBLE_QUOTE='"'
+
+        COMMA=','
+        COLON=':'
+        LINE_COMMENT='regexp:(//|#).*'
+        BLOCK_COMMENT='regexp:/\*([^*]|\*+[^*/])*(\*+/)'
+
+        TRUE="true"
+        FALSE="false"
+        NULL="null"
+//        NEW_LINE="regexp:\n"
+        WHITE_SPACE="regexp:[\f\r\t\v ]+"
+
+        NUMBER='regexp:-?(0|\d+)(\.\d+)?([Ee][+-]?\d+)?'
+
+//        JSON_STRING="regexp:(\"[^\"\n]*\"|'[^\'\n]*')"
+        JSON_STRING_SPECIAL_LETTER="regexp:\\(\"|'|\\|/|b|f|n|r|t|([uU][0-9a-fA-F]{4}))"
+//        JSON_STRING_OTHER="regexp:[^\"'\n]+"
+//        QUOTELESS_STRING="regexp:[^\"'\n\s{}:,\[\]]+"
+        MULTILINE_STRING_TOKEN="regexp:'''([^']*('{1,2}[^'])*)+'''"
+        DOUBLE_QUOTED_STRING="regexp:\"([^\\\"\r\n]|\\[^\r\n])*\"?"
+        SINGLE_QUOTED_STRING="regexp:'([^\\\'\r\n]|\\[^\r\n])*'?"
+        QUOTELESS_STRING="regexp:[^'\"\f\n\r\t:,/\\\[\]{}\s\d]([^\\'\"\f\n\r\t:,\[\]{}]*[^\\'\"\f\n\r\t:,\[\]{}\s])?"
+
+//        SEPARATOR_TOKEN="regexp:[\s\n]*([,\n])[\s\n]*"
+
+//        IDENTIFIER="regexp:[^'\"\f\n\r\t,:\[\]{}\\s]+"
+    ]
+    extends("array|object|literal")=value
+    extends("multiline_string|quote_less_string|json_string")=string_literal
+    extends("array|object")=container
+    extends("string_literal|number_literal|boolean_literal|null_literal")=literal
+    implements("member")=[
+      "com.zelaux.hjson.psi.HJsonElement"
+      "com.intellij.psi.PsiNamedElement"
+    ]
+}
+
+hjson::=object_full|object
+value::= array|object_full|literal
+literal::=number_literal|boolean_literal|null_literal|string_literal
+comment::= (LINE_COMMENT NEW_LINE) | BLOCK_COMMENT
+/*comment_statement::=*/
+
+object_full::= '{' object? '}'{
+    extends=object
+}
+object::=(member (separator member)* separator?)?{
+  pin=1
+  methods=[
+    findMember
+    getPresentation
+  ]
+//  recoverWhile = not_brace_or_next_value
+  mixin="com.zelaux.hjson.psi.impl.HJsonObjectMixin"
+}
+member::= member_name  COLON member_value{
+  methods=[
+    getName
+    getValue
+    // suppress getValueList() accessor
+    value=""
+    getPresentation
+  ]
+  mixin="com.zelaux.hjson.psi.impl.HJsonMemberMixin"
+  //pin(".*")=1
+}
+member_name::= quote_less_string|json_string{
+    methods=[
+        getNameElement
+        getName
+    ]
+}
+member_value::=value{
+    extends=value
+}
+
+array::= '['( value ( separator value)* separator? )? ']'{
+//  recoverWhile = not_bracket_or_next_value
+    //pin=1
+}
+
+number_literal ::=  NUMBER  {
+  methods=[
+    NUMBER=""
+    getValue
+  ]
+}
+boolean_literal ::=  TRUE | FALSE  {
+  methods=[
+    getValue
+  ]
+}
+null_literal ::=  NULL
+
+
+string_literal::=json_string | quote_less_string|multiline_string{
+ methods=[
+    getTextFragments
+    getValue
+    isPropertyName
+    SINGLE_QUOTED_STRING=""
+    DOUBLE_QUOTED_STRING=""
+    QUOTE_LESS_STRING=""
+  ]
+  mixin="com.zelaux.hjson.psi.impl.HJsonStringLiteralMixin"
+}
+
+quote_less_string::=QUOTELESS_STRING
+multiline_string::= MULTILINE_STRING_TOKEN
+json_string::=DOUBLE_QUOTED_STRING | SINGLE_QUOTED_STRING
+
+//special_letter::=JSON_STRING_SPECIAL_LETTER
+//simple_letter::= QUOTELESS_STRING
+
+separator::=COMMA?
+//:=(NEW_LINE|WHITE_SPACE)
+
+fake container::=
+
+// Recoveries
+private not_bracket_or_next_value ::= !(']'|value)
+private not_brace_or_next_value ::= !('}'|value)

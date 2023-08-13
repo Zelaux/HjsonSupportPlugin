@@ -1,0 +1,22 @@
+{
+property: 11
+array: [
+12
+34
+45
+567
+]
+object: {
+one: 0
+two: 1
+three: 2
+}
+boolean: false
+boolean2: true
+number: 013213e-1
+strings: [
+"double_quoted"
+'single_quoted'
+no_qouted
+]
+}
