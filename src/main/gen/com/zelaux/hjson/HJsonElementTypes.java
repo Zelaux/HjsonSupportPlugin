@@ -10,7 +10,6 @@ public interface HJsonElementTypes {
 
   IElementType ARRAY = new HJsonElementType("ARRAY");
   IElementType BOOLEAN_LITERAL = new HJsonElementType("BOOLEAN_LITERAL");
-  IElementType COMMENT = new HJsonElementType("COMMENT");
   IElementType JSON_STRING = new HJsonElementType("JSON_STRING");
   IElementType LITERAL = new HJsonElementType("LITERAL");
   IElementType MEMBER = new HJsonElementType("MEMBER");
@@ -22,7 +21,6 @@ public interface HJsonElementTypes {
   IElementType OBJECT = new HJsonElementType("OBJECT");
   IElementType OBJECT_FULL = new HJsonElementType("OBJECT_FULL");
   IElementType QUOTE_LESS_STRING = new HJsonElementType("QUOTE_LESS_STRING");
-  IElementType SEPARATOR = new HJsonElementType("SEPARATOR");
   IElementType STRING_LITERAL = new HJsonElementType("STRING_LITERAL");
   IElementType VALUE = new HJsonElementType("VALUE");
 
@@ -37,7 +35,6 @@ public interface HJsonElementTypes {
   IElementType L_BRACKET = new HJsonTokenType("[");
   IElementType L_CURLY = new HJsonTokenType("{");
   IElementType MULTILINE_STRING_TOKEN = new HJsonTokenType("MULTILINE_STRING_TOKEN");
-  IElementType NEW_LINE = new HJsonTokenType("NEW_LINE");
   IElementType NULL = new HJsonTokenType("null");
   IElementType NUMBER = new HJsonTokenType("NUMBER");
   IElementType QUOTELESS_STRING = new HJsonTokenType("QUOTELESS_STRING");
@@ -56,9 +53,6 @@ public interface HJsonElementTypes {
       else if (type == BOOLEAN_LITERAL) {
         return new HJsonBooleanLiteralImpl(node);
       }
-      else if (type == COMMENT) {
-        return new HJsonCommentImpl(node);
-      }
       else if (type == JSON_STRING) {
         return new HJsonJsonStringImpl(node);
       }
@@ -67,6 +61,9 @@ public interface HJsonElementTypes {
       }
       else if (type == MEMBER_NAME) {
         return new HJsonMemberNameImpl(node);
+      }
+      else if (type == MEMBER_VALUE) {
+        return new HJsonMemberValueImpl(node);
       }
       else if (type == MULTILINE_STRING) {
         return new HJsonMultilineStringImpl(node);
@@ -85,9 +82,6 @@ public interface HJsonElementTypes {
       }
       else if (type == QUOTE_LESS_STRING) {
         return new HJsonQuoteLessStringImpl(node);
-      }
-      else if (type == SEPARATOR) {
-        return new HJsonSeparatorImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }

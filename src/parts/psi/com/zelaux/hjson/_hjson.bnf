@@ -12,8 +12,9 @@
     psiImplUtilClass = 'com.zelaux.hjson.psi.impl.HJsonPsiImplUtils'
     tokenTypeClass = 'com.zelaux.hjson.HJsonTokenType'
 
-    implements("value") = "com.zelaux.hjson.psi.HJsonElement"
-    extends("value") = "com.zelaux.hjson.psi.impl.HJsonElementImpl"
+    implements(".*") = "com.zelaux.hjson.psi.HJsonElement"
+    extends("value|object") = "com.zelaux.hjson.psi.impl.HJsonElementImpl"
+
     tokens=[
         L_CURLY='{'
         R_CURLY='}'
@@ -48,10 +49,12 @@
 
 //        IDENTIFIER="regexp:[^'\"\f\n\r\t,:\[\]{}\\s]+"
     ]
-    extends("array|object|literal")=value
-    extends("multiline_string|quote_less_string|json_string")=string_literal
-    extends("array|object")=container
-    extends("string_literal|number_literal|boolean_literal|null_literal")=literal
+    extends("array|object_full|literal")=value
+    implements("object_full")=object
+
+    extends(".*string")=string_literal
+    extends(".*literal")=literal
+    implements("object|array") = [container value]
     implements("member")=[
       "com.zelaux.hjson.psi.HJsonElement"
       "com.intellij.psi.PsiNamedElement"
@@ -59,16 +62,20 @@
 }
 
 hjson::=object_full|object
-value::= array|object_full|literal
+ value::= array|object_full|literal
 literal::=number_literal|boolean_literal|null_literal|string_literal
-comment::= (LINE_COMMENT NEW_LINE) | BLOCK_COMMENT
+fake comment::= (LINE_COMMENT NEW_LINE) | BLOCK_COMMENT
 /*comment_statement::=*/
 
-object_full::= '{' object? '}'{
-    extends=object
+object_full::= '{' (member (COMMA? member)* COMMA?)? '}'{
+  methods=[
+    findMember
+    getPresentation
+  ]
+  mixin="com.zelaux.hjson.psi.impl.HJsonObjectMixin"
 }
 object::=(member (COMMA? member)* COMMA?)?{
-  pin=1
+//  pin=1
   methods=[
     findMember
     getPresentation
@@ -76,7 +83,8 @@ object::=(member (COMMA? member)* COMMA?)?{
 //  recoverWhile = not_brace_or_next_value
   mixin="com.zelaux.hjson.psi.impl.HJsonObjectMixin"
 }
-member::= member_name  COLON member_value{
+member::= member_name  COLON? member_value?{
+  pin=1
   methods=[
     getName
     getValue
@@ -89,15 +97,14 @@ member::= member_name  COLON member_value{
 }
 member_name::= quote_less_string|json_string{
     methods=[
-        getNameElement
+//    nameElement="/expr[0]"
+//        getNameElement
         getName
     ]
 }
-member_value::=value{
-    extends=value
-}
+member_value::=value
 
-array::= '['( value ( COMMA? value)* COMMA? )? ']'{
+array::= '['( value COMMA? )* ']'?{
 //  recoverWhile = not_bracket_or_next_value
     //pin=1
 }
@@ -135,11 +142,11 @@ json_string::=DOUBLE_QUOTED_STRING | SINGLE_QUOTED_STRING
 //special_letter::=JSON_STRING_SPECIAL_LETTER
 //simple_letter::= QUOTELESS_STRING
 
-separator::=COMMA?
+//separator::=COMMA?
 //:=(NEW_LINE|WHITE_SPACE)
 
 fake container::=
 
 // Recoveries
-private not_bracket_or_next_value ::= !(']'|value)
-private not_brace_or_next_value ::= !('}'|value)
+//private not_bracket_or_next_value ::= !(']'|value)
+//private not_brace_or_next_value ::= !('}'|value)

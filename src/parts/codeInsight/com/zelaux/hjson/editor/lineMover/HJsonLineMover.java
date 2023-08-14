@@ -77,11 +77,11 @@ public class HJsonLineMover extends LineMover {
             PsiElement firstParent = destFirst.getParent();
             PsiElement secondParent = destSecond.getParent();
 
-            HJsonValue firstParentParent = PsiTreeUtil.getParentOfType(firstParent, HJsonObject.class, HJsonArray.class);
+            HJsonElement firstParentParent = PsiTreeUtil.getParentOfType(firstParent, HJsonObject.class, HJsonArray.class);
             if (firstParentParent == secondParent) {
                 myDirection = down ? HJsonLineMover.Direction.Outside : HJsonLineMover.Direction.Inside;
             }
-            HJsonValue secondParentParent = PsiTreeUtil.getParentOfType(secondParent, HJsonObject.class, HJsonArray.class);
+            HJsonElement secondParentParent = PsiTreeUtil.getParentOfType(secondParent, HJsonObject.class, HJsonArray.class);
             if (firstParent == secondParentParent) {
                 myDirection = down ? HJsonLineMover.Direction.Inside : HJsonLineMover.Direction.Outside;
             }

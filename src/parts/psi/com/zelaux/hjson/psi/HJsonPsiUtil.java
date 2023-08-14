@@ -181,7 +181,7 @@ public class HJsonPsiUtil {
      * Add new property and necessary comma either at the beginning of the object literal or at its end.
      *
      * @param object   object literal
-     * @param property new property, probably created via {@link HJsonElementGenerator}
+     * @param property new property, probably created via {@link HJsonFactory}
      * @param first    if true make new property first in the object, otherwise append in the end of property list
      * @return property as returned by {@link PsiElement#addAfter(PsiElement, PsiElement)}
      */
@@ -192,7 +192,7 @@ public class HJsonPsiUtil {
             final HJsonMember lastProperty = ContainerUtil.getLastItem(propertyList);
             if (lastProperty != null) {
                 final PsiElement addedProperty = object.addAfter(property, lastProperty);
-                object.addBefore(new HJsonElementGenerator(object.getProject()).createComma(), addedProperty);
+                object.addBefore(new HJsonFactory(object.getProject()).createComma(), addedProperty);
                 return addedProperty;
             }
         }
@@ -200,7 +200,7 @@ public class HJsonPsiUtil {
         assert hasElementType(leftBrace, HJsonElementTypes.L_CURLY);
         final PsiElement addedProperty = object.addAfter(property, leftBrace);
         if (!propertyList.isEmpty()) {
-            object.addAfter(new HJsonElementGenerator(object.getProject()).createComma(), addedProperty);
+            object.addAfter(new HJsonFactory(object.getProject()).createComma(), addedProperty);
         }
         return addedProperty;
     }

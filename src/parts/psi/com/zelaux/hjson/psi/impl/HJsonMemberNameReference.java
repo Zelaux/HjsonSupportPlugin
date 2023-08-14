@@ -29,7 +29,7 @@ public class HJsonMemberNameReference  implements PsiReference {
     public TextRange getRangeInElement() {
         final @NotNull HJsonMemberName nameElement = myMember.getMemberName();
         // Either value of string with quotes stripped or element's text as is
-        return ElementManipulators.getValueTextRange(nameElement.getNameElement());
+        return ElementManipulators.getValueTextRange(nameElement.getStringLiteral());
     }
 
     @Nullable

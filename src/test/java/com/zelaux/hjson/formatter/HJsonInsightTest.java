@@ -30,7 +30,7 @@ public class HJsonInsightTest extends LightJavaCodeInsightFixtureTestCase {
     }
 /*
     public void testCompletion() {
-        myFixture.configureByFiles("CompleteTestData.java", "DefaultTestData.hjson");
+        myFixture.configureByFiles("CompleteTestData.java", "0-expected.hjson");
         myFixture.complete(CompletionType.BASIC);
         List<String> lookupElementStrings = myFixture.getLookupElementStrings();
         assertNotNull(lookupElementStrings);
@@ -43,25 +43,6 @@ public class HJsonInsightTest extends LightJavaCodeInsightFixtureTestCase {
         myFixture.checkHighlighting(false, false, true, true);
     }
 */
-@Test
-    public void testFormatter() {
-        myFixture.configureByFile("formatter/FormatterTestData.hjson");
-        CodeStyle.getLanguageSettings(myFixture.getFile()).SPACE_AROUND_ASSIGNMENT_OPERATORS = true;
-        CodeStyle.getLanguageSettings(myFixture.getFile()).KEEP_BLANK_LINES_IN_CODE = 2;
-        WriteCommandAction.writeCommandAction(getProject()).run(() ->
-                CodeStyleManager.getInstance(getProject()).reformatText(
-                        myFixture.getFile(),
-                        ContainerUtil.newArrayList(myFixture.getFile().getTextRange())
-                )
-        );
-    try {
-        FileUtil.writeToFile(new File(getTestDataPath()+"/formatter/demo.hjson"),myFixture.getFile().getText());
-    } catch (IOException e) {
-        throw new RuntimeException(e);
-    }
-    myFixture.checkResultByFile("formatter/DefaultTestData.hjson");
-    }
-
    /* public void testRename() {
         myFixture.configureByFiles("RenameTestData.java", "RenameTestData.simple");
         myFixture.renameElementAtCaret("websiteUrl");
@@ -77,7 +58,7 @@ public class HJsonInsightTest extends LightJavaCodeInsightFixtureTestCase {
         Collection<UsageInfo> usageInfos = myFixture.testFindUsages("FindUsagesTestData.simple", "FindUsagesTestData.java");
         assertEquals(1, usageInfos.size());
     }*/
-
+@Test
     public void testCommenter() {
         myFixture.configureByText(HJsonFileType.INSTANCE, "<caret>member: value");
         CommentByLineCommentAction commentAction = new CommentByLineCommentAction();

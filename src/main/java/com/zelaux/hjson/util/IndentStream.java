@@ -42,7 +42,9 @@ public class IndentStream extends PrintStream {
     }
 
     public IndentStream(PrintStream printStream) {
-        this(printStream, "    ");
+        //noinspection UnnecessaryUnicodeEscape
+        this(printStream, "\u0020\u0020\u0020\u0020");
+
     }
 
     public void increaseIndent() {

@@ -8,38 +8,18 @@ import com.intellij.lang.Language;
 import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ContainerUtil;
 import com.zelaux.hjson.HJsonBundle;
 import com.zelaux.hjson.HJsonLanguage;
+import com.zelaux.hjson.formatter.style.CommaState;
+import com.zelaux.hjson.formatter.style.PropertyAlignment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 
 import static com.intellij.psi.codeStyle.CodeStyleSettingsCustomizableOptions.getInstance;
 
 public class HJsonLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
-    private static class Holder {
-        private static final String[] ALIGN_OPTIONS = Arrays.stream(HJsonCodeStyleSettings.PropertyAlignment.values())
-                .map(alignment -> alignment.getDescription())
-                .toArray(value -> new String[value]);
-
-        private static final int[] ALIGN_VALUES =
-                ArrayUtil.toIntArray(
-                        ContainerUtil.map(HJsonCodeStyleSettings.PropertyAlignment.values(), alignment -> alignment.getId()));
-
-        private static final String SAMPLE = "{\n" +
-                                             "    \"json literals are\": {\n" +
-                                             "        \"strings\": [\"foo\", \"bar\", \"\\u0062\\u0061\\u0072\"],\n" +
-                                             "        strings: [\"foo\", \"bar\", \"\\u0062\\u0061\\u0072\"],\n" +
-                                             "        \"numbers\": [42, 6.62606975e-34],\n" +
-                                             "        \"boolean values\": [true, false,],\n" +
-                                             "        \"objects\": {\"null\": null,\"another\": null,}\n" +
-                                             "    }\n" +
-                                             "}";
-    }
     @Override
     public void customizeSettings(@NotNull CodeStyleSettingsCustomizable consumer, @NotNull SettingsType settingsType) {
         if (settingsType == SettingsType.SPACING_SETTINGS) {
@@ -50,20 +30,27 @@ public class HJsonLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
             consumer.renameStandardOption("SPACE_WITHIN_BRACES", HJsonBundle.message("formatter.space_within_braces.label"));
             consumer.showCustomOption(HJsonCodeStyleSettings.class, "SPACE_BEFORE_COLON", HJsonBundle.message("formatter.space_before_colon.label"), getInstance().SPACES_OTHER);
             consumer.showCustomOption(HJsonCodeStyleSettings.class, "SPACE_AFTER_COLON", HJsonBundle.message("formatter.space_after_colon.label"), getInstance().SPACES_OTHER);
-        }
-        else if (settingsType == SettingsType.BLANK_LINES_SETTINGS) {
+        } else if (settingsType == SettingsType.BLANK_LINES_SETTINGS) {
             consumer.showStandardOptions("KEEP_BLANK_LINES_IN_CODE");
-        }
-        else if (settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS) {
+        } else if (settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS) {
             consumer.showStandardOptions("RIGHT_MARGIN",
                     "WRAP_ON_TYPING",
                     "KEEP_LINE_BREAKS",
                     "WRAP_LONG_LINES");
 
+
             consumer.showCustomOption(HJsonCodeStyleSettings.class,
-                    "KEEP_TRAILING_COMMA",
+                    "COMMAS",
+                    HJsonBundle.message("formatter.commas.label"),
+                    null,
+                    CommaState.info.ids,
+                    CommaState.info.descriptions );
+            consumer.showCustomOption(HJsonCodeStyleSettings.class,
+                    "TRAILING_COMMA",
                     HJsonBundle.message("formatter.trailing_comma.label"),
-                    getInstance().WRAPPING_KEEP);
+                    HJsonBundle.message("formatter.commas.label"),
+                    CommaState.info.ids,
+                    CommaState.info.descriptions);
 
             consumer.showCustomOption(HJsonCodeStyleSettings.class,
                     "ARRAY_WRAPPING",
@@ -83,8 +70,8 @@ public class HJsonLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
                     "PROPERTY_ALIGNMENT",
                     HJsonBundle.message("formatter.align.properties.caption"),
                     HJsonBundle.message("formatter.objects.label"),
-                    HJsonLanguageCodeStyleSettingsProvider.Holder.ALIGN_OPTIONS,
-                    HJsonLanguageCodeStyleSettingsProvider.Holder.ALIGN_VALUES);
+                    PropertyAlignment.info.ids,
+                    PropertyAlignment.info.descriptions);
 
         }
     }
@@ -119,12 +106,12 @@ public class HJsonLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
         if (codeStyleObject instanceof HJsonCodeStyleSettings && field.getName().equals("PROPERTY_ALIGNMENT")) {
             return new MagicIntegerConstAccessor(
                     codeStyleObject, field,
-                    new int[] {
-                            HJsonCodeStyleSettings.PropertyAlignment.DO_NOT_ALIGN.getId(),
-                            HJsonCodeStyleSettings.PropertyAlignment.ALIGN_ON_VALUE.getId(),
-                            HJsonCodeStyleSettings.PropertyAlignment.ALIGN_ON_COLON.getId()
+                    new int[]{
+                            PropertyAlignment.DO_NOT_ALIGN.getId(),
+                            PropertyAlignment.ALIGN_ON_VALUE.getId(),
+                            PropertyAlignment.ALIGN_ON_COLON.getId()
                     },
-                    new String[] {
+                    new String[]{
                             "do_not_align",
                             "align_on_value",
                             "align_on_colon"
@@ -132,5 +119,21 @@ public class HJsonLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
             );
         }
         return null;
+    }
+
+
+    private static class Holder {
+        private static final String SAMPLE = "{\n" +
+                "    \"json literals are\": {\n" +
+                "        \"strings\": [\"foo\", \"bar\", \"\\u0062\\u0061\\u0072\"]\n" +
+                "        strings: [\"foo\", \"bar\", \"\\u0062\\u0061\\u0072\"]\n" +
+                "        \"numbers\": [42, 6.62606975e-34],\n" +
+                "        \"numbers\": [1,2],\n" +
+                "        \"boolean values\": [true, false],\n" +
+                "        \"objects\": {\"null\": null,\"another\": null,}\n" +
+                "    }\n" +
+                "}";
+
+        //        private static final
     }
 }

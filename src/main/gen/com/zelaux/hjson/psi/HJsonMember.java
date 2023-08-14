@@ -12,9 +12,16 @@ public interface HJsonMember extends HJsonElement, PsiNamedElement {
   @NotNull
   HJsonMemberName getMemberName();
 
+  @Nullable
+  HJsonMemberValue getMemberValue();
+
   @NotNull String getName();
 
   @Nullable HJsonValue getValue();
+
+  //WARNING: value(...) is skipped
+  //matching value(HJsonMember, ...)
+  //methods are not found in HJsonPsiImplUtils
 
   @Nullable ItemPresentation getPresentation();
 

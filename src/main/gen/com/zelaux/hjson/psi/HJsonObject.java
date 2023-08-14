@@ -6,7 +6,7 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.navigation.ItemPresentation;
 
-public interface HJsonObject extends HJsonValue {
+public interface HJsonObject extends HJsonElement, HJsonContainer, HJsonValue {
 
   @NotNull
   List<HJsonMember> getMemberList();

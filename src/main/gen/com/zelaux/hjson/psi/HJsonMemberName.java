@@ -5,12 +5,10 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface HJsonMemberName extends PsiElement {
+public interface HJsonMemberName extends HJsonElement {
 
   @NotNull
   HJsonStringLiteral getStringLiteral();
-
-  @NotNull HJsonValue getNameElement();
 
   @NotNull String getName();
 

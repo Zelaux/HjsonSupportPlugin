@@ -34,6 +34,12 @@ public class HJsonMemberImpl extends HJsonMemberMixin implements HJsonMember {
   }
 
   @Override
+  @Nullable
+  public HJsonMemberValue getMemberValue() {
+    return findChildByClass(HJsonMemberValue.class);
+  }
+
+  @Override
   public @NotNull String getName() {
     return HJsonPsiImplUtils.getName(this);
   }

@@ -3,32 +3,27 @@ package com.zelaux.hjson.formatter;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
-import com.zelaux.hjson.HJsonBundle;
 import com.zelaux.hjson.HJsonLanguage;
+import com.zelaux.hjson.formatter.style.CommaState;
+import com.zelaux.hjson.formatter.style.PropertyAlignment;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.PropertyKey;
 
 public class HJsonCodeStyleSettings extends CustomCodeStyleSettings {
 
-    public static final int DO_NOT_ALIGN_PROPERTY = HJsonCodeStyleSettings.PropertyAlignment.DO_NOT_ALIGN.getId();
-    public static final int ALIGN_PROPERTY_ON_VALUE = HJsonCodeStyleSettings.PropertyAlignment.ALIGN_ON_VALUE.getId();
-    public static final int ALIGN_PROPERTY_ON_COLON = HJsonCodeStyleSettings.PropertyAlignment.ALIGN_ON_COLON.getId();
+    public static final int DO_NOT_ALIGN_PROPERTY = PropertyAlignment.DO_NOT_ALIGN.getId();
+    public static final int ALIGN_PROPERTY_ON_VALUE = PropertyAlignment.ALIGN_ON_VALUE.getId();
+    public static final int ALIGN_PROPERTY_ON_COLON = PropertyAlignment.ALIGN_ON_COLON.getId();
 
     public boolean SPACE_AFTER_COLON = true;
     public boolean SPACE_BEFORE_COLON = false;
-    public boolean KEEP_TRAILING_COMMA = false;
-
-    // TODO: check whether it's possible to migrate CustomCodeStyleSettings to newer com.intellij.util.xmlb.XmlSerializer
     /**
-     * Contains value of {@link HJsonCodeStyleSettings.PropertyAlignment#getId()}
+     * Contains value of {@link PropertyAlignment#getId()}
      *
      * @see #DO_NOT_ALIGN_PROPERTY
      * @see #ALIGN_PROPERTY_ON_VALUE
      * @see #ALIGN_PROPERTY_ON_COLON
      */
-    public int PROPERTY_ALIGNMENT = HJsonCodeStyleSettings.PropertyAlignment.DO_NOT_ALIGN.getId();
-
+    public int PROPERTY_ALIGNMENT = PropertyAlignment.DO_NOT_ALIGN.getId();
     @MagicConstant(flags = {
             CommonCodeStyleSettings.DO_NOT_WRAP,
             CommonCodeStyleSettings.WRAP_ALWAYS,
@@ -37,7 +32,6 @@ public class HJsonCodeStyleSettings extends CustomCodeStyleSettings {
     })
     @CommonCodeStyleSettings.WrapConstant
     public int OBJECT_WRAPPING = CommonCodeStyleSettings.WRAP_ALWAYS;
-
     // This was default policy for array elements wrapping in JavaScript's JSON.
     // CHOP_DOWN_IF_LONG seems more appropriate however for short arrays.
     @MagicConstant(flags = {
@@ -48,31 +42,30 @@ public class HJsonCodeStyleSettings extends CustomCodeStyleSettings {
     })
     @CommonCodeStyleSettings.WrapConstant
     public int ARRAY_WRAPPING = CommonCodeStyleSettings.WRAP_ALWAYS;
+    private int COMMAS = CommaState.KEEP.getId();
+    private int TRAILING_COMMA = CommaState.KEEP.id;
 
     public HJsonCodeStyleSettings(CodeStyleSettings container) {
         super(HJsonLanguage.INSTANCE.getID(), container);
     }
 
-    public enum PropertyAlignment {
-        DO_NOT_ALIGN(0, "formatter.align.properties.none"),
-        ALIGN_ON_VALUE(1, "formatter.align.properties.on.value"),
-        ALIGN_ON_COLON(2, "formatter.align.properties.on.colon");
-        @PropertyKey(resourceBundle = HJsonBundle.BUNDLE)
-        private final String myKey;
-        private final int myId;
+    // TODO: check whether it's possible to migrate CustomCodeStyleSettings to newer com.intellij.util.xmlb.XmlSerializer
 
-        PropertyAlignment(int id, @NotNull @PropertyKey(resourceBundle = HJsonBundle.BUNDLE) String key) {
-            myKey = key;
-            myId = id;
-        }
+    public CommaState commas() {
+        return CommaState.all[COMMAS];
+    }
 
-        @NotNull
-        public String getDescription() {
-            return HJsonBundle.message(myKey);
-        }
+    public HJsonCodeStyleSettings commas(CommaState value) {
+        this.COMMAS = value.id;
+        return this;
+    }
 
-        public int getId() {
-            return myId;
-        }
+    public CommaState trailingComma() {
+        return CommaState.all[TRAILING_COMMA];
+    }
+
+    public HJsonCodeStyleSettings trailingComma(CommaState trailingComma) {
+        this.TRAILING_COMMA = trailingComma.id;
+        return this;
     }
 }

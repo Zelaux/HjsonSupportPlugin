@@ -13,16 +13,17 @@ import java.io.PrintStream;
 public class PrintVisitor extends HJsonRecursiveElementVisitor {
     private final ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
     private final PrintStream rawStream = new PrintStream(byteOutputStream);
-    final IndentStream stream = new IndentStream(rawStream);
+    @SuppressWarnings("UnnecessaryUnicodeEscape")
+    final IndentStream stream = new IndentStream(rawStream,"\u0020\u0020");
     public boolean arrayComma = true;
     public boolean objectComma = true;
 
-    @Override
+/*    @Override
     public void visitElement(@NotNull PsiElement o) {
         stream.increaseIndent();
         o.acceptChildren(this);
         stream.decreaseIndent();
-    }
+    }*/
 
     @Override
     public void visitLiteral(@NotNull HJsonLiteral o) {
@@ -57,12 +58,7 @@ public class PrintVisitor extends HJsonRecursiveElementVisitor {
 
     @Override
     public void visitObjectFull(@NotNull HJsonObjectFull o) {
-        HJsonObject object = o.getObject();
-        if (object != null) {
-            object.accept(this);
-        } else {
-            stream.print("{}");
-        }
+        visitObject(o);
 
     }
 
@@ -80,22 +76,20 @@ public class PrintVisitor extends HJsonRecursiveElementVisitor {
     @Override
     public void visitObject(@NotNull HJsonObject o) {
         stream.println("{");
-        if (o != null) {
-            stream.increaseIndent();
-            for (HJsonMember member : o.getMemberList()) {
-                member.accept(this);
-                if (objectComma) stream.print(',');
-                stream.println();
-            }
-            stream.decreaseIndent();
+        stream.increaseIndent();
+        for (HJsonMember member : o.getMemberList()) {
+            member.accept(this);
+            if (objectComma) stream.print(',');
+            stream.println();
         }
+        stream.decreaseIndent();
         stream.print("}");
     }
 
     @Override
     public void visitMember(@NotNull HJsonMember o) {
 
-        o.getMemberName().getNameElement().accept(this);
+        o.getMemberName().accept(this);
         stream.print(": ");
         o.getValue().accept(this);
     }

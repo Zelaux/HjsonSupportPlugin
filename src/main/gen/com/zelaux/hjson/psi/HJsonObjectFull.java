@@ -4,10 +4,15 @@ package com.zelaux.hjson.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.navigation.ItemPresentation;
 
-public interface HJsonObjectFull extends HJsonObject {
+public interface HJsonObjectFull extends HJsonValue, HJsonObject {
 
-  @Nullable
-  HJsonObject getObject();
+  @NotNull
+  List<HJsonMember> getMemberList();
+
+  @Nullable HJsonMember findMember(@NotNull String name);
+
+  @Nullable ItemPresentation getPresentation();
 
 }

@@ -9,8 +9,9 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.zelaux.hjson.HJsonElementTypes.*;
 import com.zelaux.hjson.psi.*;
+import com.intellij.navigation.ItemPresentation;
 
-public class HJsonObjectFullImpl extends HJsonObjectImpl implements HJsonObjectFull {
+public class HJsonObjectFullImpl extends HJsonObjectMixin implements HJsonObjectFull {
 
   public HJsonObjectFullImpl(@NotNull ASTNode node) {
     super(node);
@@ -28,9 +29,14 @@ public class HJsonObjectFullImpl extends HJsonObjectImpl implements HJsonObjectF
   }
 
   @Override
-  @Nullable
-  public HJsonObject getObject() {
-    return findChildByClass(HJsonObject.class);
+  @NotNull
+  public List<HJsonMember> getMemberList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, HJsonMember.class);
+  }
+
+  @Override
+  public @Nullable ItemPresentation getPresentation() {
+    return HJsonPsiImplUtils.getPresentation(this);
   }
 
 }

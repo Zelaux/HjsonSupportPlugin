@@ -20,17 +20,18 @@ public class HJsonPrintVisitorTest extends ParsingTestCase {
 
     @Test
     public void testPrintVisitor() {
-        String name = getTestName();
         try {
-
             PrintVisitor visitor = new PrintVisitor();
-            HJsonFileImpl file = (HJsonFileImpl) parseFile(name, loadFile(name + "." + myFileExt));
+            HJsonFileImpl file = (HJsonFileImpl) parseFile("data.hjson", loadFile("data.hjson"));
             ensureNoErrorElements();
             file.accept(visitor);
             String visitorString = visitor.getString().replace("\r\n", "\n");
             visitor.reset();
+            //src/test/testData/visitor/data.hjson
+            //src\test\testData\visitor\src\test\testData\visitor\data.hjson
             parseFile("Dummy.hjson", visitorString).accept(visitor);
-            FileUtil.writeToFile(new File(myFullDataPath, "__visitorString.hjson"), visitorString);
+            FileUtil.writeToFile(new File(myFullDataPath, "actual.hjson"), visitorString);
+            doCheckResult(myFullDataPath, "expected.hjson", visitorString);
             Assert.assertEquals(visitorString, visitor.getString().replace("\r\n", "\n"));
             toParseTreeText(file, true, false);
 
@@ -44,7 +45,7 @@ public class HJsonPrintVisitorTest extends ParsingTestCase {
      */
     @Override
     protected String getTestDataPath() {
-        return "src/test/testData";
+        return "src/test/testData/visitor";
     }
 
     @Override

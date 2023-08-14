@@ -1,0 +1,19 @@
+<idea-plugin>
+    <description><![CDATA[
+    <h1>HJson</h1>
+
+    <h2>Description</h2>
+
+    <p>Support for <a href="https://hjson.github.io">HJSON</a></p>
+
+    <h2>Features</h2>
+
+    <ul>
+        <li>Syntax highlight (colors uses from json highlight)</li>
+        <li>Code formatting</li>
+        <li>Folding for arrays, objects, multiline strings</li>
+        <li>Commenting</li>
+        <li>Spell checking</li>
+    </ul>
+        ]]></description>
+</idea-plugin>

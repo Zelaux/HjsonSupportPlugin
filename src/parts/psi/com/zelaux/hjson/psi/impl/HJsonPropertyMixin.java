@@ -7,7 +7,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
-import com.zelaux.hjson.psi.HJsonElementGenerator;
+import com.zelaux.hjson.psi.HJsonFactory;
 import com.zelaux.hjson.psi.HJsonMember;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -19,9 +19,9 @@ import org.jetbrains.annotations.NotNull;
 
     @Override
     public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
-        final HJsonElementGenerator generator = new HJsonElementGenerator(getProject());
+        final HJsonFactory generator = new HJsonFactory(getProject());
         // Strip only both quotes in case user wants some exotic name like key'
-        getMemberName().getNameElement().replace(generator.createStringLiteral(StringUtil.unquoteString(name)));
+        getMemberName().getStringLiteral().replace(generator.createJsonStringLiteral(StringUtil.unquoteString(name)));
         return this;
     }
 

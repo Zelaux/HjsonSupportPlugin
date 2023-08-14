@@ -10,6 +10,8 @@ public class HJsonElementVisitor extends PsiElementVisitor {
 
   public void visitArray(@NotNull HJsonArray o) {
     visitValue(o);
+    // visitContainer(o);
+    // visitValue(o);
   }
 
   public void visitBooleanLiteral(@NotNull HJsonBooleanLiteral o) {
@@ -17,11 +19,11 @@ public class HJsonElementVisitor extends PsiElementVisitor {
   }
 
   public void visitComment(@NotNull HJsonComment o) {
-    visitPsiElement(o);
+    visitElement(o);
   }
 
   public void visitContainer(@NotNull HJsonContainer o) {
-    visitPsiElement(o);
+    visitElement(o);
   }
 
   public void visitJsonString(@NotNull HJsonJsonString o) {
@@ -34,15 +36,16 @@ public class HJsonElementVisitor extends PsiElementVisitor {
 
   public void visitMember(@NotNull HJsonMember o) {
     visitElement(o);
+    // visitElement(o);
     // visitPsiNamedElement(o);
   }
 
   public void visitMemberName(@NotNull HJsonMemberName o) {
-    visitPsiElement(o);
+    visitElement(o);
   }
 
   public void visitMemberValue(@NotNull HJsonMemberValue o) {
-    visitValue(o);
+    visitElement(o);
   }
 
   public void visitMultilineString(@NotNull HJsonMultilineString o) {
@@ -58,19 +61,18 @@ public class HJsonElementVisitor extends PsiElementVisitor {
   }
 
   public void visitObject(@NotNull HJsonObject o) {
-    visitValue(o);
+    visitElement(o);
+    // visitContainer(o);
+    // visitValue(o);
   }
 
   public void visitObjectFull(@NotNull HJsonObjectFull o) {
-    visitObject(o);
+    visitValue(o);
+    // visitObject(o);
   }
 
   public void visitQuoteLessString(@NotNull HJsonQuoteLessString o) {
     visitStringLiteral(o);
-  }
-
-  public void visitSeparator(@NotNull HJsonSeparator o) {
-    visitPsiElement(o);
   }
 
   public void visitStringLiteral(@NotNull HJsonStringLiteral o) {

@@ -84,7 +84,7 @@ public class HJsonSmartEnterProcessor extends SmartEnterProcessorWithFixers {
                     }
                 }
                 else {
-                    final HJsonValue propertyKey = ((HJsonMember)element).getMemberName().getNameElement();
+                    final HJsonValue propertyKey = ((HJsonMember)element).getMemberName().getStringLiteral();
                     TextRange keyRange = propertyKey.getTextRange();
                     final int keyStartOffset = keyRange.getStartOffset();
                     int keyEndOffset = keyRange.getEndOffset();

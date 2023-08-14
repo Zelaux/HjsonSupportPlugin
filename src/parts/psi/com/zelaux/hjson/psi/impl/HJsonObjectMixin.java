@@ -6,6 +6,7 @@ import com.intellij.json.psi.impl.JsonContainerImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
+import com.zelaux.hjson.psi.HJsonContainer;
 import com.zelaux.hjson.psi.HJsonMember;
 import com.zelaux.hjson.psi.HJsonObject;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class HJsonObjectMixin extends HJsonContainerImpl implements HJsonObject {
+public abstract class HJsonObjectMixin extends HJsonValueImpl implements HJsonObject, HJsonContainer {
     private final CachedValueProvider<Map<String, HJsonMember>> myPropertyCache =
             () -> {
                 final Map<String, HJsonMember> cache = new HashMap<>();

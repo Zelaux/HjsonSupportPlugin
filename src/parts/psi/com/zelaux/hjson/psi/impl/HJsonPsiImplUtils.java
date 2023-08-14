@@ -39,31 +39,31 @@ public class HJsonPsiImplUtils {
 
     @NotNull
     public static String getName(@NotNull HJsonMemberName memberName) {
-        return StringUtil.unescapeStringCharacters(HJsonPsiUtil.stripQuotes(memberName.getNameElement().getText()));
+        return StringUtil.unescapeStringCharacters(HJsonPsiUtil.stripQuotes(memberName.getStringLiteral().getText()));
     }
-
-    /**
+/*
+    *//**
      * Actually only JSON string literal should be accepted as valid name of property according to standard,
      * but for compatibility with JavaScript integration any JSON literals as well as identifiers (unquoted words)
      * are possible and highlighted as error later.
      *
      * @see JsonStandardComplianceInspection
-     */
+     *//*
     @NotNull
-    public static HJsonValue getNameElement(@NotNull HJsonMemberName property) {
+    public static HJsonStringLiteral getNameElement(@NotNull HJsonMemberName property) {
         final PsiElement firstChild = property.getFirstChild();
-        assert firstChild instanceof HJsonLiteral;
-        return (HJsonValue) firstChild;
-    }
-
-    @Nullable
+        assert firstChild instanceof HJsonStringLiteral;
+        return (HJsonStringLiteral) firstChild;
+    }*/
+@Nullable
     public static HJsonValue getValue(@NotNull HJsonMember property) {
-        return PsiTreeUtil.getNextSiblingOfType(property.getMemberName(), HJsonValue.class);
+    HJsonMemberValue memberValue = property.getMemberValue();
+    return memberValue==null?null:memberValue.getValue();
     }
-
+/*
     public static boolean isQuotedString(@NotNull HJsonLiteral literal) {
         return literal.getNode().findChildByType(HJsonParserDefinition.STRING_LITERALS) != null;
-    }
+    }*/
 
     @Nullable
     public static ItemPresentation getPresentation(@NotNull final HJsonMember property) {

@@ -45,13 +45,6 @@ public class HJsonUtil { private HJsonUtil() {
         return null;
     }
 
-    @Nullable
-    public static <T extends HJsonElement> T getPropertyValueOfType(@NotNull final HJsonObject object, @NotNull final String name,
-                                                                    @NotNull final Class<T> clazz) {
-        final HJsonMember property = object.findMember(name);
-        if (property == null) return null;
-        return ObjectUtils.tryCast(property.getValue(), clazz);
-    }
 
     public static boolean isArrayElement(@NotNull PsiElement element) {
         return element instanceof HJsonValue && element.getParent() instanceof HJsonArray;

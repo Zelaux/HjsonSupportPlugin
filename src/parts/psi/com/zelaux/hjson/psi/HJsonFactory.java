@@ -8,11 +8,15 @@ import com.intellij.psi.PsiFileFactory;
 import com.zelaux.hjson.HJsonFileType;
 import org.jetbrains.annotations.NotNull;
 
-public class HJsonElementGenerator {
+public class HJsonFactory {
     private final Project myProject;
 
-    public HJsonElementGenerator(@NotNull Project project) {
+    public HJsonFactory(@NotNull Project project) {
         myProject = project;
+    }
+
+    public static HJsonFactory getInstance(Project project) {
+        return new HJsonFactory(project);
     }
 
     /**
@@ -34,7 +38,7 @@ public class HJsonElementGenerator {
      * @param <T>     type of the JSON value desired
      * @return element created from given text
      *
-     * @see #createStringLiteral(String)
+     * @see #createJsonStringLiteral(String)
      */
     @NotNull
     public <T extends HJsonValue> T createValue(@NotNull String content) {
@@ -56,8 +60,11 @@ public class HJsonElementGenerator {
      * @return JSON string literal created from given text
      */
     @NotNull
-    public HJsonStringLiteral createStringLiteral(@NotNull String unescapedContent) {
-        return createValue('"' + StringUtil.escapeStringCharacters(unescapedContent) + '"');
+    public HJsonJsonString createJsonStringLiteral(@NotNull String unescapedContent) {
+        return createJsonStringLiteral('"',unescapedContent);
+    }
+    public HJsonJsonString createJsonStringLiteral(char quote,@NotNull String unescapedContent) {
+        return createValue(quote + StringUtil.escapeStringCharacters(unescapedContent) + quote);
     }
 
     @NotNull

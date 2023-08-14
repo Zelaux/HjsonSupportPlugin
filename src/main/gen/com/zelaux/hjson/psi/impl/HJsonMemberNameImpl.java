@@ -34,11 +34,6 @@ public class HJsonMemberNameImpl extends ASTWrapperPsiElement implements HJsonMe
   }
 
   @Override
-  public @NotNull HJsonValue getNameElement() {
-    return HJsonPsiImplUtils.getNameElement(this);
-  }
-
-  @Override
   public @NotNull String getName() {
     return HJsonPsiImplUtils.getName(this);
   }

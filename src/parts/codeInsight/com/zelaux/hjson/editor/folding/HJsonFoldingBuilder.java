@@ -72,7 +72,7 @@ public class HJsonFoldingBuilder implements FoldingBuilder, DumbAware {
     public String getPlaceholderText(@NotNull ASTNode node) {
         final IElementType type = node.getElementType();
         if (type == HJsonElementTypes.OBJECT_FULL) {
-            final HJsonObject object = node.getPsi(HJsonObjectFull.class).getObject();
+            final HJsonObject object = node.getPsi(HJsonObjectFull.class);
             final List<HJsonMember> properties = object.getMemberList();
             HJsonMember candidate = null;
             for (HJsonMember property : properties) {

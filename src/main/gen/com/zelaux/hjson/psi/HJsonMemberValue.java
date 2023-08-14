@@ -5,6 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface HJsonMemberValue extends HJsonValue {
+public interface HJsonMemberValue extends HJsonElement {
+
+  @NotNull
+  HJsonValue getValue();
 
 }
