@@ -14,3 +14,6 @@ Support for [HJSON lang](https://hjson.github.io)
 - Folding for arrays, objects, multiline strings
 - Commenting
 - Spell checking
+- Transforming to JSON
+- Simplifying HJSON
+- Duplicated properties inspection
