@@ -11,7 +11,7 @@ public class ParserPreview extends HJsonParserTest {
     @Override
     @Test
     public void testParsingTestData() {
-        PsiFile file = parseFile("dummy.hjson", "{\"property\": 11, \"array\": [12, 34, 45, 567], \"object\": {\"one\": 0, \"two\": {\"hmm\\n\": \"it\"}, \"three\": 2}, \"version\": 0.0, \"boolean\": false, \"boolean2\": true, \"number\": 013213e-1, \"strings\": [\"double_quoted\", 'single_quoted', \"no qouted\"], \"name\": {\"obj\": \"it\"}, \"field\": 123, \"array\": [123, \"bvad\", \"dawd,\", 'ddawd', \"multiline1\\nmultiline2\\nmultiline3\\nmultiline4\"]}");
+        PsiFile file = parseFile("dummy.hjson", "it it:it");
 //        System.out.println(file.getFirstChild().getLastChild().getPrevSibling());
         System.out.println(toParseTreeText(file, false, true));
         try {

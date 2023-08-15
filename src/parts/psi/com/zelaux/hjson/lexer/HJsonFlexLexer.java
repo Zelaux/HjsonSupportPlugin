@@ -1,7 +1,6 @@
 package com.zelaux.hjson.lexer;
 
 import com.intellij.lexer.FlexLexer;
-import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.zelaux.hjson.HJsonElementTypes;
 import com.zelaux.hjson.HJsonTokenType;
@@ -9,6 +8,9 @@ import com.zelaux.hjson.psi.HJsonTokens;
 
 import java.io.IOException;
 import java.util.Stack;
+
+import static com.intellij.psi.TokenType.WHITE_SPACE;
+import static com.zelaux.hjson.HJsonElementTypes.*;
 
 class HJsonFlexLexer implements FlexLexer {
     private static final HJsonTokenType objectContextToken = HJsonElementTypes.L_CURLY;
@@ -32,7 +34,7 @@ class HJsonFlexLexer implements FlexLexer {
     }
 
     private static boolean isNotEmpty(IElementType currentToken) {
-        return currentToken != TokenType.WHITE_SPACE && !HJsonTokens.COMMENTARIES.contains(currentToken);
+        return currentToken != WHITE_SPACE && !HJsonTokens.COMMENTARIES.contains(currentToken);
     }
 
     @Override
@@ -77,14 +79,14 @@ class HJsonFlexLexer implements FlexLexer {
         int currentStart = myFlex.getTokenStart();
         int currentEnd = myFlex.getTokenEnd();
         int currentState = myFlex.yystate();
-        if (currentToken == HJsonElementTypes.NUMBER_TOKEN) {
+        if (currentToken == NUMBER_TOKEN) {
             try {
                 IElementType next0 = myFlex.advance();
-                if (next0 == TokenType.WHITE_SPACE) {
+                if (next0 == WHITE_SPACE) {
                     int i = indexOf(buffer, myFlex.getTokenStart(), myFlex.getTokenEnd(), '\n');
                     if (i == -1) {
                         IElementType next1 = myFlex.advance();
-                        if (next1 == HJsonElementTypes.QUOTELESS_STRING_TOKEN) {
+                        if (next1 == QUOTELESS_STRING_TOKEN) {
                             currentToken = next1;
                             currentEnd = myCustomEnd = myFlex.getTokenEnd();
                         }
@@ -92,7 +94,7 @@ class HJsonFlexLexer implements FlexLexer {
 
 //                    Pattern.compile("[\\0000]")
                 }
-                if (currentToken == HJsonElementTypes.NUMBER_TOKEN) {
+                if (currentToken == NUMBER_TOKEN) {
                     backTo(currentEnd, currentState);
                 }
             } catch (IOException e) {
@@ -100,12 +102,13 @@ class HJsonFlexLexer implements FlexLexer {
             }
         }
         if (isObjectContext() && isMemberNameContext()) {
-            if (currentToken == HJsonElementTypes.QUOTELESS_STRING_TOKEN// && indexOf(buffer, currentStart, currentEnd, ' ') == -1
-                    || currentToken == HJsonElementTypes.DOUBLE_QUOTED_STRING_TOKEN
-                    || currentToken == HJsonElementTypes.SINGLE_QUOTED_STRING_TOKEN) {
-                currentToken = HJsonElementTypes.MEMBER_NAME;
+            if (// && indexOf(buffer, currentStart, currentEnd, ' ') == -1
+                    currentToken == DOUBLE_QUOTED_STRING_TOKEN
+                            || currentToken == SINGLE_QUOTED_STRING_TOKEN) {
+                currentToken = MEMBER_NAME;
             }
-            if (currentToken == HJsonElementTypes.NUMBER_TOKEN) {
+            boolean wasQuoteless = currentToken == QUOTELESS_STRING_TOKEN;
+            if (currentToken == NUMBER_TOKEN || wasQuoteless) {
                 boolean isMain = previousNonEmptyToken == null;
                 if (isMain) {
                     try {
@@ -118,9 +121,33 @@ class HJsonFlexLexer implements FlexLexer {
                     }
                     backTo(currentEnd, currentState);
                 }
-                if (!isMain) currentToken = HJsonElementTypes.MEMBER_NAME;
+                if (!isMain) currentToken = MEMBER_NAME;
             }
-        } else if (currentToken == HJsonElementTypes.QUOTELESS_STRING_TOKEN) {
+            if (wasQuoteless && currentToken != QUOTELESS_STRING_TOKEN) {
+                boolean backTo = true;
+                try {
+                    while (true) {
+                        IElementType next0 = myFlex.advance();
+                        if (next0 == null) break;
+                        if (next0 == WHITE_SPACE) {
+                            IElementType next1 = myFlex.advance();
+                            if (next1 == null) break;
+                            if (next1 == QUOTELESS_STRING_TOKEN) {
+                                currentToken=QUOTELESS_STRING_TOKEN;
+                                currentEnd = myFlex.getTokenEnd();
+                                currentState = myFlex.yystate();
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                } catch (IOException ignore) {
+                }
+                if (backTo) backTo(currentEnd, currentState);
+            }
+
+        }
+        if (currentToken == QUOTELESS_STRING_TOKEN) {
 
             try {
                 //noinspection InfiniteLoopStatement
@@ -131,7 +158,7 @@ class HJsonFlexLexer implements FlexLexer {
                         throw null;
                     int nextStart = myFlex.getTokenStart();
                     int nextEnd = myFlex.getTokenEnd();
-                    if (nextToken == TokenType.WHITE_SPACE) {
+                    if (nextToken == WHITE_SPACE) {
                         int index = indexOf(buffer, nextStart, nextEnd, '\n');
                         if (index != -1) {
                             myCustomEnd = index;
@@ -182,7 +209,7 @@ class HJsonFlexLexer implements FlexLexer {
         try {
             while (true) {
                 IElementType advance = advance();
-                if (getTokenEnd()>=start || advance==null) break;
+                if (getTokenEnd() >= start || advance == null) break;
             }
         } catch (IOException ignored) {
         }

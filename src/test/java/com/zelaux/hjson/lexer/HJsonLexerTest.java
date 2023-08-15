@@ -31,6 +31,10 @@ public class HJsonLexerTest {
 //                    entry(HJsonElementTypes.QUOTELESS_STRING_TOKEN, "0 ,", 0, 3)
                     entry(HJsonElementTypes.NUMBER_TOKEN,"123",0,3)
             ),
+            test("abc",
+//                    entry(HJsonElementTypes.QUOTELESS_STRING_TOKEN, "0 ,", 0, 3)
+                    entry(HJsonElementTypes.QUOTELESS_STRING_TOKEN,"abc",0,3)
+            ),
     };
 
     public HJsonLexerTest() {
