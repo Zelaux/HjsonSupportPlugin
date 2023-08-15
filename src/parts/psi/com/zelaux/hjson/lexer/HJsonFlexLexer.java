@@ -170,12 +170,38 @@ class HJsonFlexLexer implements FlexLexer {
 
     @Override
     public void reset(CharSequence buf, int start, int end, int initialState) {
-        myFlex.reset(buf, start, end, initialState);
+        myFlex.reset(buf, 0, end, initialState);
         this.myEnd = end;
         myCustomStart = myCustomEnd = -1;
-        context.clear();
-        context.add(objectContextToken);
         previousNonEmptyToken = null;
         this.buffer = buf;
+
+        context.clear();
+        context.add(objectContextToken);
+        if (start == 0) return;
+        try {
+            while (true) {
+                IElementType advance = advance();
+                if (getTokenEnd()>=start || advance==null) break;
+            }
+        } catch (IOException ignored) {
+        }
+    /*    for (int i = 0; i < start; i++) {
+            char c = buf.charAt(i);
+            if (!Character.isSpaceChar(c)) {
+                if (c == ':') {
+                    previousNonEmptyToken = HJsonElementTypes.COLON;
+                } else {
+                    previousNonEmptyToken = TokenType.WHITE_SPACE;
+                }
+            }
+            if (c == '[') {
+                context.add(HJsonElementTypes.L_BRACKET);
+            } else if (c == '{') {
+                context.add(HJsonElementTypes.L_CURLY);
+            } else if (c == ']' || c == '}') {
+                context.pop();
+            }
+        }*/
     }
 }

@@ -43,14 +43,14 @@ public class HJsonLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
                     "COMMAS",
                     HJsonBundle.message("formatter.commas.label"),
                     null,
-                    CommaState.info.ids,
-                    CommaState.info.descriptions );
+                    CommaState.info.descriptions,
+                    CommaState.info.ids);
             consumer.showCustomOption(HJsonCodeStyleSettings.class,
                     "TRAILING_COMMA",
                     HJsonBundle.message("formatter.trailing_comma.label"),
                     HJsonBundle.message("formatter.commas.label"),
-                    CommaState.info.ids,
-                    CommaState.info.descriptions);
+                    CommaState.info.descriptions,
+                    CommaState.info.ids);
 
             consumer.showCustomOption(HJsonCodeStyleSettings.class,
                     "ARRAY_WRAPPING",
