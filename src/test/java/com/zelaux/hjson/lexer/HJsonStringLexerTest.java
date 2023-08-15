@@ -1,11 +1,8 @@
 package com.zelaux.hjson.lexer;
 
 import com.intellij.psi.StringEscapesTokenTypes;
-import com.intellij.psi.tree.IElementType;
 import junit.framework.TestCase;
 import org.junit.Assert;
-
-import java.util.Objects;
 
 public class HJsonStringLexerTest extends TestCase {
     public HJsonStringLexerTest() {
@@ -50,35 +47,4 @@ public class HJsonStringLexerTest extends TestCase {
 
     }
 
-    static class LexerResultEntry {
-        public final IElementType tokenType;
-        public final String text;
-        public final int tokenStart;
-        public final int tokenEnd;
-
-        public LexerResultEntry(IElementType tokenType, String text, int tokenStart, int tokenEnd) {
-            this.tokenType = tokenType;
-            this.text = text;
-            this.tokenStart = tokenStart;
-            this.tokenEnd = tokenEnd;
-        }
-
-        @Override
-        public String toString() {
-            return "'"+text + "' (" + tokenType + "[" + tokenStart + ':' + tokenEnd + "])";
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            LexerResultEntry that = (LexerResultEntry) o;
-            return tokenStart == that.tokenStart && tokenEnd == that.tokenEnd && Objects.equals(tokenType, that.tokenType) && Objects.equals(text, that.text);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(tokenType, text, tokenStart, tokenEnd);
-        }
-    }
 }

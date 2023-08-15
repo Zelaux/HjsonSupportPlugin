@@ -20,6 +20,7 @@ public interface HJsonElementTypes {
   IElementType NUMBER_LITERAL = new HJsonElementType("NUMBER_LITERAL");
   IElementType OBJECT = new HJsonElementType("OBJECT");
   IElementType OBJECT_FULL = new HJsonElementType("OBJECT_FULL");
+  IElementType QUOTE_LESS_PART_STRING = new HJsonElementType("QUOTE_LESS_PART_STRING");
   IElementType QUOTE_LESS_STRING = new HJsonElementType("QUOTE_LESS_STRING");
   IElementType STRING_LITERAL = new HJsonElementType("STRING_LITERAL");
   IElementType VALUE = new HJsonElementType("VALUE");
@@ -30,7 +31,6 @@ public interface HJsonElementTypes {
   IElementType DOUBLE_QUOTE = new HJsonTokenType("\"");
   IElementType DOUBLE_QUOTED_STRING = new HJsonTokenType("DOUBLE_QUOTED_STRING");
   IElementType FALSE = new HJsonTokenType("false");
-  IElementType JSON_STRING_SPECIAL_LETTER = new HJsonTokenType("JSON_STRING_SPECIAL_LETTER");
   IElementType LINE_COMMENT = new HJsonTokenType("LINE_COMMENT");
   IElementType L_BRACKET = new HJsonTokenType("[");
   IElementType L_CURLY = new HJsonTokenType("{");
@@ -79,6 +79,9 @@ public interface HJsonElementTypes {
       }
       else if (type == OBJECT_FULL) {
         return new HJsonObjectFullImpl(node);
+      }
+      else if (type == QUOTE_LESS_PART_STRING) {
+        return new HJsonQuoteLessPartStringImpl(node);
       }
       else if (type == QUOTE_LESS_STRING) {
         return new HJsonQuoteLessStringImpl(node);

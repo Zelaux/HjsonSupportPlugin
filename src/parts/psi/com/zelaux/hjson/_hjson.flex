@@ -31,9 +31,9 @@ BLOCK_COMMENT="/"\*([^*]|\*+[^*/])*(\*+"/")?
 DOUBLE_QUOTED_STRING=\"([^\\\"\r\n]|\\[^\r\n])*\"?
 SINGLE_QUOTED_STRING='([^\\'\r\n]|\\[^\r\n])*'?
 MULTILINE_STRING_TOKEN='''([^']*('{1,2}[^'])*)+(''')?
-JSON_STRING_SPECIAL_LETTER=\\(\"|'|\\|\/|b|f|n|r|t|([uU][0-9a-fA-F]{4}))
+//JSON_STRING_SPECIAL_LETTER=\\(\"|'|\\|\/|b|f|n|r|t|([uU][0-9a-fA-F]{4}))
 NUMBER=-?(0|\d+)(\.\d+)?([Ee][+-]?\d+)?
-QUOTELESS_STRING=[^'\"\f\\\s/\n\r\t\d,\[\]:{}]([^'\"\f\\\n\r\t,\[\]:{}]*[^'\"\f\\\n\r\t,\[\]:{}\s])?
+QUOTELESS_STRING=([^'\"\s,:\[\]{}\-\d]|((-?(0|\d+)(\.\d+)?([Ee][+-]?\d+)?)[ \t]))[^\n:]*[^\s:]
 NEW_LINE=\s*\n\s*
 
 %%
@@ -59,7 +59,7 @@ NEW_LINE=\s*\n\s*
 
   {LINE_COMMENT}              { return LINE_COMMENT; }
   {BLOCK_COMMENT}             { return BLOCK_COMMENT; }
-  {JSON_STRING_SPECIAL_LETTER} {return JSON_STRING_SPECIAL_LETTER; }
+  //{JSON_STRING_SPECIAL_LETTER} {return JSON_STRING_SPECIAL_LETTER; }
   {NUMBER}                    { return NUMBER; }
 
 }

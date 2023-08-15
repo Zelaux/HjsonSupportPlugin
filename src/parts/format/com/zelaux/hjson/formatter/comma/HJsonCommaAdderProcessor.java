@@ -1,4 +1,4 @@
-package com.zelaux.hjson.formatter;
+package com.zelaux.hjson.formatter.comma;
 
 import com.intellij.application.options.CodeStyle;
 import com.intellij.lang.ASTNode;
@@ -9,15 +9,17 @@ import com.intellij.psi.impl.source.codeStyle.PreFormatProcessor;
 import com.intellij.util.DocumentUtil;
 import com.zelaux.hjson.HJsonElementTypes;
 import com.zelaux.hjson.HJsonLanguage;
+import com.zelaux.hjson.formatter.HJsonCodeStyleSettings;
 import com.zelaux.hjson.formatter.style.CommaState;
 import com.zelaux.hjson.psi.*;
 import com.zelaux.hjson.psi.impl.HJsonRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class HJsonCommasProcessor implements PreFormatProcessor {
+public class HJsonCommaAdderProcessor implements PreFormatProcessor {
+
+
     @NotNull
     @Override
     public TextRange process(@NotNull ASTNode element, @NotNull TextRange range) {
@@ -26,7 +28,7 @@ public class HJsonCommasProcessor implements PreFormatProcessor {
             return range;
         }
         HJsonCodeStyleSettings settings = CodeStyle.getCustomSettings(rootPsi.getContainingFile(), HJsonCodeStyleSettings.class);
-        if (settings.trailingComma() == CommaState.KEEP && settings.commas() == CommaState.KEEP) {
+        if (settings.trailingComma() != CommaState.ADD && settings.commas() != CommaState.ADD) {
             return range;
         }
         PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(rootPsi.getProject());
@@ -36,7 +38,7 @@ public class HJsonCommasProcessor implements PreFormatProcessor {
         }
         DocumentUtil.executeInBulk(document, () -> {
             psiDocumentManager.doPostponedOperationsAndUnblockDocument(document);
-            PsiElementVisitor visitor = new HJsonCommasProcessor.Visitor(document, settings.trailingComma(), settings.commas());
+            PsiElementVisitor visitor = new HJsonCommaAdderProcessor.Visitor(document, settings.trailingComma(), settings.commas());
             rootPsi.accept(visitor);
             psiDocumentManager.commitDocument(document);
         });
@@ -86,11 +88,8 @@ public class HJsonCommasProcessor implements PreFormatProcessor {
             for (int i = list.size() - 1; i >= 0; i--) {
                 HJsonElement member = list.get(i);
                 boolean isLast = i == list.size() - 1;
-                if (commas == CommaState.REMOVE || commas == CommaState.KEEP && trailingComma == CommaState.REMOVE && isLast) {
-                    deleteTrailingCommas(member, isLast);
-                }
                 if (commas == CommaState.ADD || commas == CommaState.KEEP && trailingComma == CommaState.ADD && isLast) {
-                    if (!hasTrailingComma(member, null)) {
+                    if (needTrailingComma(member, null)) {
                         PsiElement comma = HJsonFactory.getInstance(member.getProject())
                                 .createComma();
                         member.getParent().addAfter(comma, member);
@@ -99,43 +98,27 @@ public class HJsonCommasProcessor implements PreFormatProcessor {
             }
         }
 
-        private void deleteTrailingCommas(@Nullable PsiElement lastElementOrOpeningBrace, boolean last) {
-            PsiElement element = lastElementOrOpeningBrace != null ? lastElementOrOpeningBrace.getNextSibling() : null;
 
-            while (element != null) {
-                if (element.getNode().getElementType() == HJsonElementTypes.COMMA ||
-                        element instanceof PsiErrorElement && ",".equals(element.getText())) {
-                    PsiElement next = element.getNextSibling();
-                    if (!last && next != null) {
-                        if (next instanceof PsiWhiteSpace && !next.getText().contains("\n")) {
-                            break;
-                        }
-                    }
-                    deleteNode(element.getNode());
-                } else if (!(element instanceof PsiComment || element instanceof PsiWhiteSpace)) {
-                    break;
+        private boolean needTrailingComma(@NotNull PsiElement element, PsiElement until) {
+            {
+                PsiElement elem = element;
+                while (elem != null) {
+                    if (elem instanceof HJsonQuoteLessString) return false;
+                    elem = elem.getLastChild();
                 }
-                element = element.getNextSibling();
             }
-        }
-
-        private boolean hasTrailingComma(@NotNull PsiElement element, PsiElement until) {
             element = element.getNextSibling();
 
             while (element != null && element != until) {
                 if (element.getNode().getElementType() == HJsonElementTypes.COMMA ||
                         element instanceof PsiErrorElement && ",".equals(element.getText())) {
-                    return true;
+                    return false;
                 } else if (!(element instanceof PsiComment || element instanceof PsiWhiteSpace)) {
                     break;
                 }
                 element = element.getNextSibling();
             }
-            return false;
-        }
-
-        private void deleteNode(@NotNull ASTNode node) {
-            node.getTreeParent().removeChild(node);
+            return true;
         }
     }
 }

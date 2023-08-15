@@ -37,7 +37,7 @@
         NUMBER='regexp:-?(0|\d+)(\.\d+)?([Ee][+-]?\d+)?'
 
 //        JSON_STRING="regexp:(\"[^\"\n]*\"|'[^\'\n]*')"
-        JSON_STRING_SPECIAL_LETTER="regexp:\\(\"|'|\\|/|b|f|n|r|t|([uU][0-9a-fA-F]{4}))"
+//        JSON_STRING_SPECIAL_LETTER="regexp:\\(\"|'|\\|/|b|f|n|r|t|([uU][0-9a-fA-F]{4}))"
 //        JSON_STRING_OTHER="regexp:[^\"'\n]+"
 //        QUOTELESS_STRING="regexp:[^\"'\n\s{}:,\[\]]+"
         MULTILINE_STRING_TOKEN="regexp:'''([^']*('{1,2}[^'])*)+'''"
@@ -95,7 +95,7 @@ member::= member_name  COLON? member_value?{
   mixin="com.zelaux.hjson.psi.impl.HJsonMemberMixin"
   //pin(".*")=1
 }
-member_name::= quote_less_string|json_string{
+member_name::= quote_less_part_string|json_string{
     methods=[
 //    nameElement="/expr[0]"
 //        getNameElement
@@ -135,7 +135,9 @@ string_literal::=json_string | quote_less_string|multiline_string{
   mixin="com.zelaux.hjson.psi.impl.HJsonStringLiteralMixin"
 }
 
-quote_less_string::=QUOTELESS_STRING
+quote_less_string::=quote_less_part_string (COLON quote_less_part_string)*
+quote_less_part_string::=QUOTELESS_STRING
+
 multiline_string::= MULTILINE_STRING_TOKEN
 json_string::=DOUBLE_QUOTED_STRING | SINGLE_QUOTED_STRING
 

@@ -23,6 +23,7 @@
     <extensions defaultExtensionNs="com.intellij.lang">
         <parserDefinition language="HJSON" implementationClass="com.zelaux.hjson.HJsonParserDefinition"/>
         <syntaxHighlighterFactory language="HJSON" implementationClass="com.zelaux.hjson.HJsonSyntaxHighlighterFactory"/>
+        <ast.factory language="HJSON" implementationClass="com.zelaux.hjson.ast.HJsonASTFactory"/>
     </extensions>
     <extensions defaultExtensionNs="com.intellij">
         <fileType language="HJSON" extensions="hjson" implementationClass="com.zelaux.hjson.HJsonFileType" name="HJSON"/>
@@ -30,7 +31,8 @@
         <codeStyleSettingsProvider implementation="com.zelaux.hjson.formatter.HJsonCodeStyleSettingsProvider"/>
         <langCodeStyleSettingsProvider implementation="com.zelaux.hjson.formatter.HJsonLanguageCodeStyleSettingsProvider"/>
         <lang.formatter language="HJSON" implementationClass="com.zelaux.hjson.formatter.HJsonFormattingBuilderModel"/>
-        <preFormatProcessor implementation="com.zelaux.hjson.formatter.HJsonCommasProcessor"/>
+        <preFormatProcessor implementation="com.zelaux.hjson.formatter.comma.HJsonCommaAdderProcessor"/>
+        <postFormatProcessor implementation="com.zelaux.hjson.formatter.comma.HJsonCommaRemoverProcessor"/>
         <lang.braceMatcher  language="HJSON" implementationClass="com.zelaux.hjson.HJsonBraceMatcher"/>
         <quoteHandler fileType="HJSON" className="com.zelaux.hjson.HJsonQuoteHandler"/>
 
@@ -43,7 +45,7 @@
         <lang.smartEnterProcessor language="HJSON" implementationClass="com.zelaux.hjson.editor.smartEnter.HJsonSmartEnterProcessor"/>
         <lang.namesValidator language="HJSON" implementationClass="com.zelaux.hjson.HJsonNamesValidator"/>
         <lang.commenter language="HJSON" implementationClass="com.intellij.json.editor.JsonCommenter"/>
-<!--TODO        <lang.surroundDescriptor language="JSON" implementationClass="com.intellij.json.surroundWith.JsonSurroundDescriptor"/>-->
+        <!--TODO        <lang.surroundDescriptor language="JSON" implementationClass="com.intellij.json.surroundWith.JsonSurroundDescriptor"/>-->
         <!--TODO <lang.findUsagesProvider language="JSON" implementationClass="com.intellij.json.findUsages.JsonFindUsagesProvider"/>-->
         <statementUpDownMover implementation="com.zelaux.hjson.editor.lineMover.HJsonLineMover" id="HJSON" order="before line"/>
         <!--TODO  <liveTemplateContext implementation="com.intellij.json.liveTemplates.JsonContextType"/>

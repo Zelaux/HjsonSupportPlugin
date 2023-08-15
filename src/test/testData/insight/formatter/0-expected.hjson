@@ -29,8 +29,7 @@ array: [
 
   123,
   "bvad",
-  dawd,
-  'ddawd'
+  dawd,'ddawd'
   '''
   multiline
   '''

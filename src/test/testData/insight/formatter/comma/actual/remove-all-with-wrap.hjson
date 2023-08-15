@@ -2,27 +2,28 @@ property: 11
 array: [
   12
   34
-  45,
+  45
   567
 ]
 object: {
   one: 0
   two: {
-    "hmm\n": it
+    "hmm\n": it,
   }
   three: 2
 }
 version: 0.0
-boolean: false
+boolean: false,
 boolean2: true
 number: 013213e-1
 strings: [
   "double_quoted"
   'single_quoted'
-  no_qouted
+  no_qouted,
+  98
 ]
 name: {
-  obj: it
+  obj: it,
 }
 field: 123
 array: [

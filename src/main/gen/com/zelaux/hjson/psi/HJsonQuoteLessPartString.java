@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface HJsonQuoteLessString extends HJsonStringLiteral {
+public interface HJsonQuoteLessPartString extends HJsonStringLiteral {
 
   @NotNull
-  List<HJsonQuoteLessPartString> getQuoteLessPartStringList();
+  PsiElement getQuotelessString();
 
 }

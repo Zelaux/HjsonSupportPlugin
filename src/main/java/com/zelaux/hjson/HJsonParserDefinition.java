@@ -11,13 +11,14 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import com.zelaux.hjson.ast.HJsonASTFactory;
 import com.zelaux.hjson.psi.impl.HJsonFileImpl;
 import org.jetbrains.annotations.NotNull;
 
 import static com.zelaux.hjson.HJsonElementTypes.*;
 import static com.zelaux.hjson.HJsonElementTypes.LINE_COMMENT;
 
-public class HJsonParserDefinition implements ParserDefinition {
+public class HJsonParserDefinition extends HJsonASTFactory implements ParserDefinition {
     public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE);
     public static final TokenSet STRING_LITERALS = TokenSet.create(QUOTELESS_STRING,MULTILINE_STRING,SINGLE_QUOTED_STRING,DOUBLE_QUOTED_STRING);
 

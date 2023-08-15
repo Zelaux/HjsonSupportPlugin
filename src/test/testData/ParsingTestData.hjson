@@ -9,7 +9,7 @@
   object: {
   one: 0
   two: {
-  "hmm\n": it
+  "hmm\n": it: it
   }
   three: 2
   }

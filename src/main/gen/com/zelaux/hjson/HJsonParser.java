@@ -38,7 +38,7 @@ public class HJsonParser implements PsiParser, LightPsiParser {
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
     create_token_set_(ARRAY, BOOLEAN_LITERAL, JSON_STRING, LITERAL,
       MULTILINE_STRING, NULL_LITERAL, NUMBER_LITERAL, OBJECT_FULL,
-      QUOTE_LESS_STRING, STRING_LITERAL, VALUE),
+      QUOTE_LESS_PART_STRING, QUOTE_LESS_STRING, STRING_LITERAL, VALUE),
   };
 
   /* ********************************************************** */
@@ -182,12 +182,12 @@ public class HJsonParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // quote_less_string|json_string
+  // quote_less_part_string|json_string
   public static boolean member_name(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "member_name")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, MEMBER_NAME, "<member name>");
-    r = quote_less_string(b, l + 1);
+    r = quote_less_part_string(b, l + 1);
     if (!r) r = json_string(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
@@ -200,6 +200,7 @@ public class HJsonParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, MEMBER_VALUE, "<member value>");
     r = value(b, l + 1);
+    if(r)
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -369,13 +370,48 @@ public class HJsonParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // QUOTELESS_STRING
-  public static boolean quote_less_string(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "quote_less_string")) return false;
+  public static boolean quote_less_part_string(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "quote_less_part_string")) return false;
     if (!nextTokenIs(b, QUOTELESS_STRING)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, QUOTELESS_STRING);
-    exit_section_(b, m, QUOTE_LESS_STRING, r);
+    exit_section_(b, m, QUOTE_LESS_PART_STRING, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // quote_less_part_string (COLON quote_less_part_string)*
+  public static boolean quote_less_string(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "quote_less_string")) return false;
+    if (!nextTokenIs(b, QUOTELESS_STRING)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _COLLAPSE_, QUOTE_LESS_STRING, null);
+    r = quote_less_part_string(b, l + 1);
+    r = r && quote_less_string_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // (COLON quote_less_part_string)*
+  private static boolean quote_less_string_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "quote_less_string_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!quote_less_string_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "quote_less_string_1", c)) break;
+    }
+    return true;
+  }
+
+  // COLON quote_less_part_string
+  private static boolean quote_less_string_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "quote_less_string_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, COLON);
+    r = r && quote_less_part_string(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 

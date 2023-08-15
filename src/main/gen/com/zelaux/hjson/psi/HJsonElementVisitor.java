@@ -71,6 +71,10 @@ public class HJsonElementVisitor extends PsiElementVisitor {
     // visitObject(o);
   }
 
+  public void visitQuoteLessPartString(@NotNull HJsonQuoteLessPartString o) {
+    visitStringLiteral(o);
+  }
+
   public void visitQuoteLessString(@NotNull HJsonQuoteLessString o) {
     visitStringLiteral(o);
   }

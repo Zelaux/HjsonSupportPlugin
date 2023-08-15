@@ -14,7 +14,7 @@ public class PrintVisitor extends HJsonRecursiveElementVisitor {
     private final ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
     private final PrintStream rawStream = new PrintStream(byteOutputStream);
     @SuppressWarnings("UnnecessaryUnicodeEscape")
-    final IndentStream stream = new IndentStream(rawStream,"\u0020\u0020");
+    final IndentStream stream = new IndentStream(rawStream, "\u0020\u0020");
     public boolean arrayComma = true;
     public boolean objectComma = true;
 
@@ -36,7 +36,9 @@ public class PrintVisitor extends HJsonRecursiveElementVisitor {
         stream.increaseIndent();
         for (HJsonValue value : o.getValueList()) {
             value.accept(this);
-            if (arrayComma) stream.print(',');
+            if (arrayComma && needComma(value)) {
+                stream.print(",");
+            }
             stream.println();
         }
         stream.decreaseIndent();
@@ -79,11 +81,17 @@ public class PrintVisitor extends HJsonRecursiveElementVisitor {
         stream.increaseIndent();
         for (HJsonMember member : o.getMemberList()) {
             member.accept(this);
-            if (objectComma) stream.print(',');
+            if (objectComma && needComma(member.getValue())) {
+                stream.print(',');
+            }
             stream.println();
         }
         stream.decreaseIndent();
         stream.print("}");
+    }
+
+    private static boolean needComma(HJsonValue value) {
+        return !(value instanceof HJsonQuoteLessString);
     }
 
     @Override

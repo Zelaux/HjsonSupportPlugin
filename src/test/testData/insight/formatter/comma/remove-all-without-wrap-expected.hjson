@@ -7,7 +7,7 @@ array: [
 object: {
   one: 0
   two: {
-    "hmm\n": it
+    "hmm\n": it,
   }
   three: 2
 }
@@ -18,10 +18,11 @@ number: 013213e-1
 strings: [
   "double_quoted"
   'single_quoted'
-  no_qouted
+  no_qouted,
+  98
 ]
 name: {
-  obj: it
+  obj: it,
 }
 field: 123
 array: [

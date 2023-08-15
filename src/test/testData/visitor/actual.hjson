@@ -9,7 +9,7 @@
   object: {
     one: 0,
     two: {
-      "hmm\n": it,
+      "hmm\n": it
     },
     three: 2,
   },
@@ -20,10 +20,10 @@
   strings: [
     "double_quoted",
     'single_quoted',
-    no qouted,
+    no qouted
   ],
   name: {
-    obj: it,
+    obj: it
   },
   field: 123,
   array: [
