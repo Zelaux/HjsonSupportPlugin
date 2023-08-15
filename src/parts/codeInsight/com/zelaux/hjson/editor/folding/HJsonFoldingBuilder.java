@@ -93,7 +93,25 @@ public class HJsonFoldingBuilder implements FoldingBuilder, DumbAware {
             }
             return "{...}";
         } else if (type == HJsonElementTypes.ARRAY) {
-            return "[...]";
+            HJsonArray array = node.getPsi(HJsonArray.class);
+            List<HJsonValue> list = array.getValueList();
+            StringBuilder builder = new StringBuilder("[");
+            boolean reqDots = list.size() > 1;
+            if (list.size() > 0) {
+                String text = list.get(0).getText();
+                int newLineIndex = text.indexOf('\n');
+                reqDots |= newLineIndex != -1;
+                if (newLineIndex != -1) {
+                    builder.append(text, 0, newLineIndex);
+                } else {
+                    builder.append(text);
+                }
+            }
+            if (reqDots) {
+                builder.append("...");
+            }
+            builder.append(']');
+            return builder.toString();
         } else if (type == HJsonElementTypes.LINE_COMMENT_TOKEN) {
             return "//...";
         } else if (type == HJsonElementTypes.BLOCK_COMMENT_TOKEN) {
@@ -108,9 +126,9 @@ public class HJsonFoldingBuilder implements FoldingBuilder, DumbAware {
             int i = myText.indexOf('\n');
             if (i != -1) {
                 String s = "'''";
-                return s + myText.substring(0, i) + s;
+                return s + myText.substring(0, i) + "..." + s;
             }
-            return "'''...'''";
+            return "'''" + myText + "'''";
         }
         return "...";
     }
