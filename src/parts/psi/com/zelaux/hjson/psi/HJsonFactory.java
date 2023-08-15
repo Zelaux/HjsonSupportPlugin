@@ -43,7 +43,7 @@ public class HJsonFactory {
     public <T extends HJsonValue> T createValue(@NotNull String content) {
         final PsiFile file = createDummyFile("{\"foo\": " + content + "}");
         //noinspection unchecked,ConstantConditions
-        return (T) ((HJsonObject) file.getFirstChild()).getMemberList().get(0).getValue();
+        return (T) file.getFirstChild().getFirstChild().getNextSibling().getLastChild().getLastChild();
     }
 
     @NotNull

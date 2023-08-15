@@ -8,7 +8,10 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.zelaux.hjson.HJsonBundle;
-import com.zelaux.hjson.psi.*;
+import com.zelaux.hjson.psi.HJsonElementVisitor;
+import com.zelaux.hjson.psi.HJsonFactory;
+import com.zelaux.hjson.psi.HJsonJsonString;
+import com.zelaux.hjson.psi.HJsonMember;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
@@ -20,11 +23,22 @@ public class HJsonMemberNameValidator extends LocalInspectionTool {
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
         return new HJsonElementVisitor() {
-
+            @Override
+            public void visitMember(@NotNull HJsonMember o) {
+                PsiElement memberName = o.getMemberName();
+                Matcher matcher = spacePattern.matcher(memberName.getText());
+                while (matcher.find()) {
+                    holder.registerProblem(memberName, new TextRange(matcher.start(), matcher.end()), "Member name cannot contains spaces",
+                            new ToString(true),
+                            new ToString(false)
+                    );
+                }
+                super.visitMember(o);
+            }
         };
     }
 
-    /*static class ToString implements LocalQuickFix {
+    static class ToString implements LocalQuickFix {
         public final boolean isDouble;
         public final char quote;
 
@@ -35,21 +49,21 @@ public class HJsonMemberNameValidator extends LocalInspectionTool {
 
         @Override
         public @IntentionFamilyName @NotNull String getFamilyName() {
-            if(isDouble) {
+            if (isDouble) {
                 return HJsonBundle.message("fix.to-double-quoted-string.name");
-            } else{
+            } else {
                 return HJsonBundle.message("fix.to-single-quoted-string.name");
             }
         }
 
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            HJsonQuoteLessString element = (HJsonQuoteLessString) descriptor.getPsiElement();
-            String text = element.getValue();
+            PsiElement nameElement = descriptor.getPsiElement();
+            String text = nameElement.getText();
             HJsonJsonString newElement = HJsonFactory.getInstance(project).createJsonStringLiteral(quote, text);
             WriteAction.run(() -> {
-                element.replace(newElement);
+                nameElement.replace(newElement);
             });
         }
-    }*/
+    }
 }

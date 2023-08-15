@@ -131,6 +131,12 @@ public class HJsonBlock  implements ASTBlock {
                 if (!hasElementType(childNode, HJSON_CONTAINERS)) {
                     alignment = myParent.myPropertyValueAlignment;
                 }
+            } else if(hasElementType(childNode,MEMBER_VALUE)){
+                ASTNode node = childNode.getFirstChildNode();
+                if(node!=null && hasElementType(node,MULTILINE_STRING)){
+                    indent = Indent.getContinuationIndent();
+//                    wrap = Wrap.createWrap(myCustomSettings.OBJECT_WRAPPING, true);
+                }
             }
         }
         return new HJsonBlock(this, childNode, myCustomSettings, alignment, indent, wrap, mySpacingBuilder);

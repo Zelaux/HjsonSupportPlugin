@@ -9,6 +9,11 @@ import static com.zelaux.hjson.lexer.LexerResultEntry.entry;
 
 public class HJsonLexerTest {
     static final TestCase[] cases = {
+            test("[123]",
+                    entry(HJsonElementTypes.L_BRACKET, "[", 0, 1),
+                    entry(HJsonElementTypes.NUMBER_TOKEN, "123", 1, 4),
+                    entry(HJsonElementTypes.R_BRACKET, "]", 4, 5)
+            ),
             test("true", entry(HJsonElementTypes.TRUE, "true", 0, 4)),
             test("null", entry(HJsonElementTypes.NULL, "null", 0, 4)),
             test("false", entry(HJsonElementTypes.FALSE, "false", 0, 5)),

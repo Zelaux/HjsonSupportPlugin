@@ -235,7 +235,7 @@ public class HJsonPsiImplUtils {
         String[] lines = myText.split("\n");
         int newLen = lines.length;
         int startOffset = 1;
-        if (lines.length > 0 && lines[lines.length - 1].matches("\\s+'''")) {
+        if (lines.length > 0 && lines[lines.length - 1].matches("\\s*'''")) {
             newLen -= 1;
         }
         if (lines.length > 1 && lines[0].equals("'''")) {
@@ -253,6 +253,8 @@ public class HJsonPsiImplUtils {
             int foundIndex = line.length() - 1;
             if (matcher.find()) {
                 foundIndex = matcher.start();
+            } else if(line.length()==0){
+                foundIndex=0;
             }
             int endIndex = line.length();
             int startIndex = Math.min(lineOffset, foundIndex);

@@ -12,29 +12,33 @@ object: {
   }
   three: 2
 }
-version: 0.0,
+version: 0.0
 boolean: false
 boolean2: true
 number: 013213e-1
 strings: [
-  "double_quoted"
-  'single_quoted'
-  no_qouted
+  double_quoted
+  '''
+  new_multi1
+  new_multi2
+  new_multi3
+  '''
+  single_quoted
+  no qouted
 ]
 name: {
   obj: it
-},
+}
 field: 123
-field2: '''
-        multiline1
-        multiline2
-        multiline3
-        '''
 array: [
-  123,
-  "bvad",
-  dawd,'ddawd'
+  123
+  bvad
+  dawd,
+  ddawd
   '''
-  multiline
+  multiline1
+  multiline2
+  multiline3
+  multiline4
   '''
 ]

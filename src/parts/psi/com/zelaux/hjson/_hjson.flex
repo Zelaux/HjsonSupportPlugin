@@ -33,7 +33,7 @@ SINGLE_QUOTED_STRING='([^\\'\r\n]|\\[^\r\n])*'?
 MULTILINE_STRING_TOKEN='''([^']*('{1,2}[^'])*)+(''')?
 //JSON_STRING_SPECIAL_LETTER=\\(\"|'|\\|\/|b|f|n|r|t|([uU][0-9a-fA-F]{4}))
 NUMBER=-?(0|\d+)(\.\d+)?([Ee][+-]?\d+)?
-QUOTELESS_STRING=[^'\"\s,:\[\]{}][^,\s:]*
+QUOTELESS_STRING=[^'\"\s,:\[\]{}]+
 
 %%
 <YYINITIAL> {

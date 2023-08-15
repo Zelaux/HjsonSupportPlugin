@@ -19,22 +19,23 @@ number: 013213e-1
 strings: [
   "double_quoted"
   'single_quoted'
-  no_qouted
+  no qouted
 ]
+
+
 name: {
   obj: it
 },
 field: 123
-field2: '''
-        multiline1
-        multiline2
-        multiline3
-        '''
 array: [
   123,
   "bvad",
-  dawd,'ddawd'
+  dawd,
+  'ddawd'
   '''
-  multiline
+  multiline1
+  multiline2
+  multiline3
+  multiline4
   '''
 ]

@@ -15,45 +15,7 @@ public class LexerPreview {
     public void test() {
         Lexer lexer = new HJsonLexer();
         TokenSequence sequence = TokenSequence.performLexing(
-                "\n" +
-                        "property: 11\n" +
-                        "array: [\n" +
-                        "12\n" +
-                        "34\n" +
-                        "45\n" +
-                        "567\n" +
-                        "]\n" +
-                        "object: {\n" +
-                        "one: 0\n" +
-                        "two: {\n" +
-                        "\"hmm\\n\": it\n" +
-                        "}\n" +
-                        "three: 2\n" +
-                        "}\n" +
-                        "version: 0.0,\n" +
-                        "boolean: false\n" +
-                        "boolean2: true\n" +
-                        "number: 013213e-1\n" +
-                        "strings: [\n" +
-                        "\"double_quoted\"\n" +
-                        "'single_quoted'\n" +
-                        "no_qouted\n" +
-                        "]\n" +
-                        "          name             :    {\n" +
-                        "              obj: it\n" +
-                        "          },\n" +
-                        "  field: 123\n" +
-                        "          array: [\n" +
-                        "\n" +
-                        "     123,\"bvad\",dawd,'ddawd'\n" +
-                        "            '''\n" +
-                        "            multiline\n" +
-                        "            '''\n" +
-                        "\n" +
-                        "\n" +
-                        "\n" +
-                        "\n" +
-                        "    ]", lexer);
+                "{\"property\": 11, \"array\": [12, 34, 45, 567], \"object\": {\"one\": 0, \"two\": {\"hmm\\n\": \"it\"}, \"three\": 2}, \"version\": 0.0, \"boolean\": false, \"boolean2\": true, \"number\": 013213e-1, \"strings\": [\"double_quoted\", 'single_quoted', \"no qouted\"], \"name\": {\"obj\": \"it\"}, \"field\": 123, \"array\": [123, \"bvad\", \"dawd,\", 'ddawd', \"multiline1\\nmultiline2\\nmultiline3\\nmultiline4\"]}", lexer);
         String text = String.valueOf(sequence.getTokenizedText());
         for (int i = 0; i < sequence.getTokenCount(); i++) {
             IElementType type = sequence.getTokenType(i);
@@ -64,7 +26,7 @@ public class LexerPreview {
 //            if (i1 >= 0 && i1 < tokenEnd) System.out.println();
             String original = text.substring(tokenStart, tokenEnd);
             String replace = original.replace("\n", "\\n");
-            System.out.print(type + "(" + replace + ") ");
+            System.out.print(type + "(" + replace + ")\n");
             if (!original.equals(replace)) {
                 System.out.println();
             }

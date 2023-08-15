@@ -1,22 +1,16 @@
 package com.zelaux.hjson.psi.visitors;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.zelaux.hjson.psi.*;
-import com.zelaux.hjson.psi.impl.HJsonRecursiveElementVisitor;
 import com.zelaux.hjson.util.IndentStream;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
-public class PrintVisitor extends AbstractPrintVisitor {
+public class SimplifyPrintVisitor extends AbstractPrintVisitor {
 
     @SuppressWarnings("UnnecessaryUnicodeEscape")
     final IndentStream stream = new IndentStream(super.stream, "\u0020\u0020");
-    public boolean arrayComma = true;
-    public boolean objectComma = true;
-
 
 
     @Override
@@ -24,6 +18,21 @@ public class PrintVisitor extends AbstractPrintVisitor {
         stream.print(o.getText());
     }
 
+    @Override
+    public void visitStringLiteral(@NotNull HJsonStringLiteral o) {
+        String value = o.getValue();
+        if(value.contains("\n")){
+            stream.println("'''");
+            for (String line : value.split("\n")) {
+                stream.println(line);
+            }
+            stream.print("'''");
+        }else if(value.matches(".*\\s")) {
+            stream.print(o.getText());
+        } else{
+            stream.print(value);
+        }
+    }
 
     @Override
     public void visitArray(@NotNull HJsonArray o) {
@@ -31,9 +40,6 @@ public class PrintVisitor extends AbstractPrintVisitor {
         stream.increaseIndent();
         for (HJsonValue value : o.getValueList()) {
             value.accept(this);
-            if (arrayComma && needComma(value)) {
-                stream.print(",");
-            }
             stream.println();
         }
         stream.decreaseIndent();
@@ -55,7 +61,15 @@ public class PrintVisitor extends AbstractPrintVisitor {
 
     @Override
     public void visitObjectFull(@NotNull HJsonObjectFull o) {
+        if (o.getParent() instanceof HJsonFile) {
+            visitObject(o);
+            return;
+        }
+        stream.println("{");
+        stream.increaseIndent();
         visitObject(o);
+        stream.decreaseIndent();
+        stream.print("}");
 
     }
 
@@ -72,27 +86,24 @@ public class PrintVisitor extends AbstractPrintVisitor {
 
     @Override
     public void visitObject(@NotNull HJsonObject o) {
-        stream.println("{");
-        stream.increaseIndent();
         for (HJsonMember member : o.getMemberList()) {
             member.accept(this);
-            if (objectComma && needComma(member.getValue())) {
-                stream.print(',');
-            }
             stream.println();
         }
-        stream.decreaseIndent();
-        stream.print("}");
-    }
-
-    private static boolean needComma(HJsonValue value) {
-        return !(value instanceof HJsonQuotelessString);
     }
 
     @Override
     public void visitMember(@NotNull HJsonMember o) {
 
-        stream.print(o.getMemberName().getText());
+        String text = o.getName();
+
+        if (text.matches(".*\\s.*")) {
+            stream.print('"');
+            stream.print(StringUtil.escapeStringCharacters(text));
+            stream.print('"');
+        } else {
+            stream.print(text);
+        }
         stream.print(": ");
         o.getValue().accept(this);
     }

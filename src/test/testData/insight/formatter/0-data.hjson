@@ -26,6 +26,11 @@ no_qouted
               obj: it
           },
   field: 123
+field2: '''
+multiline1
+multiline2
+multiline3
+'''
           array: [
 
      123,"bvad",dawd,'ddawd'

@@ -29,7 +29,8 @@ public class HJsonFormatterTest extends LightJavaCodeInsightFixtureTestCase {
         myFixture.configureByFile("0-data.hjson");
         CommonCodeStyleSettings languageSettings = CodeStyle.getLanguageSettings(myFixture.getFile());
         languageSettings.SPACE_AROUND_ASSIGNMENT_OPERATORS = true;
-        CodeStyle.getLanguageSettings(myFixture.getFile()).KEEP_BLANK_LINES_IN_CODE = 2;
+        languageSettings.KEEP_BLANK_LINES_IN_CODE=0;
+//        CodeStyle.getLanguageSettings(myFixture.getFile()).KEEP_BLANK_LINES_IN_CODE = 2;
         HJsonCodeStyleSettings settings = CodeStyle.getCustomSettings(myFixture.getFile(), HJsonCodeStyleSettings.class);
         settings
                 .trailingComma(CommaState.KEEP)

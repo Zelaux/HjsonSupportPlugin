@@ -8,14 +8,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.PrintStream;
 
-public class IndentStream extends PrintStream {
+public class IndentStream extends LegalPrintStream {
     public static final byte[] systemSeparatorBytes;
     public static final byte nextLineByte = 10;
     public static final int nextLineIndex;
 
     static {
 
-        systemSeparatorBytes = System.lineSeparator().getBytes(Charsets.UTF_8);
+        systemSeparatorBytes = new byte[]{'\n'};//System.lineSeparator().getBytes(Charsets.UTF_8);
         int found = -1;
         for (int i = 0; i < systemSeparatorBytes.length; i++) {
             if (systemSeparatorBytes[i] == '\n') {
@@ -31,7 +31,7 @@ public class IndentStream extends PrintStream {
     private boolean wasNextLine;
     private byte[] byteSeq;
 
-    public IndentStream(@NotNull PrintStream printStream, String indentValue) {
+    public IndentStream(@NotNull LegalPrintStream printStream, String indentValue) {
         super(printStream);
         this.separator = System.lineSeparator();
         this.indentBytes = indentValue.getBytes(Charsets.UTF_8);
@@ -41,7 +41,7 @@ public class IndentStream extends PrintStream {
         }
     }
 
-    public IndentStream(PrintStream printStream) {
+    public IndentStream(LegalPrintStream printStream) {
         //noinspection UnnecessaryUnicodeEscape
         this(printStream, "\u0020\u0020\u0020\u0020");
 

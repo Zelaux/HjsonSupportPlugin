@@ -12,13 +12,14 @@
     <xi:include href="/META-INF/description.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
 
 <!--    <xi:include href="/META-INF/description.xml"  xpointer="xpointer(/idea-plugin/*)"/>-->
 
     <depends>com.intellij.modules.lang</depends>
-
+    <xi:include href="/META-INF/inspectionsAndActions.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
     <extensions defaultExtensionNs="com.intellij.lang">
         <parserDefinition language="HJSON" implementationClass="com.zelaux.hjson.HJsonParserDefinition"/>
@@ -33,6 +34,7 @@
         <lang.formatter language="HJSON" implementationClass="com.zelaux.hjson.formatter.HJsonFormattingBuilderModel"/>
         <preFormatProcessor implementation="com.zelaux.hjson.formatter.comma.HJsonCommaAdderProcessor"/>
         <postFormatProcessor implementation="com.zelaux.hjson.formatter.comma.HJsonCommaRemoverProcessor"/>
+        <postFormatProcessor implementation="com.zelaux.hjson.formatter.multiline.MultilineStringPostProcessor"/>
         <lang.braceMatcher  language="HJSON" implementationClass="com.zelaux.hjson.HJsonBraceMatcher"/>
         <quoteHandler fileType="HJSON" className="com.zelaux.hjson.HJsonQuoteHandler"/>
 
@@ -67,5 +69,6 @@
 
         <!--EXTRA-->
         <navbar implementation="com.zelaux.hjson.structureView.HJsonStructureAwareNavbar"/>
+
     </extensions>
 </idea-plugin>

@@ -1,0 +1,16 @@
+<idea-plugin>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <localInspection implementationClass="com.zelaux.hjson.inspections.HJsonMemberNameValidator" language="HJSON"/>
+    </extensions>
+    <actions>
+        <action id="com.zelaux.hjson.actions.SimplifyCodeAction" class="com.zelaux.hjson.actions.SimplifyCodeAction"
+                text="Simplify HJSON">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorToggleColumnMode"/>
+        </action>
+        <action id="com.zelaux.hjson.actions.ToJsonCodeAction" class="com.zelaux.hjson.actions.ToJsonCodeAction"
+                text="Converts HJSON to JSON">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorToggleColumnMode"/>
+        </action>
+    </actions>
+</idea-plugin>

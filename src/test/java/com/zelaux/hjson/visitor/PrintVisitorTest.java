@@ -12,9 +12,9 @@ import java.io.File;
 import java.io.IOException;
 
 @SuppressWarnings("JUnitMixedFramework")
-public class HJsonPrintVisitorTest extends ParsingTestCase {
+public class PrintVisitorTest extends ParsingTestCase {
 
-    public HJsonPrintVisitorTest() {
+    public PrintVisitorTest() {
         super("", "hjson", new HJsonParserDefinition());
     }
 
@@ -45,7 +45,7 @@ public class HJsonPrintVisitorTest extends ParsingTestCase {
      */
     @Override
     protected String getTestDataPath() {
-        return "src/test/testData/visitor";
+        return "src/test/testData/visitor/hjson";
     }
 
     @Override
