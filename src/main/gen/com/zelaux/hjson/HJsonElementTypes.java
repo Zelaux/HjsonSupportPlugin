@@ -8,41 +8,40 @@ import com.zelaux.hjson.psi.impl.*;
 
 public interface HJsonElementTypes {
 
-  IElementType ARRAY = new HJsonElementType("ARRAY");
-  IElementType BOOLEAN_LITERAL = new HJsonElementType("BOOLEAN_LITERAL");
-  IElementType JSON_STRING = new HJsonElementType("JSON_STRING");
-  IElementType LITERAL = new HJsonElementType("LITERAL");
-  IElementType MEMBER = new HJsonElementType("MEMBER");
-  IElementType MEMBER_NAME = new HJsonElementType("MEMBER_NAME");
-  IElementType MEMBER_VALUE = new HJsonElementType("MEMBER_VALUE");
-  IElementType MULTILINE_STRING = new HJsonElementType("MULTILINE_STRING");
-  IElementType NULL_LITERAL = new HJsonElementType("NULL_LITERAL");
-  IElementType NUMBER_LITERAL = new HJsonElementType("NUMBER_LITERAL");
-  IElementType OBJECT = new HJsonElementType("OBJECT");
-  IElementType OBJECT_FULL = new HJsonElementType("OBJECT_FULL");
-  IElementType QUOTE_LESS_PART_STRING = new HJsonElementType("QUOTE_LESS_PART_STRING");
-  IElementType QUOTE_LESS_STRING = new HJsonElementType("QUOTE_LESS_STRING");
-  IElementType STRING_LITERAL = new HJsonElementType("STRING_LITERAL");
-  IElementType VALUE = new HJsonElementType("VALUE");
+  HJsonElementType ARRAY = new HJsonElementType("ARRAY");
+  HJsonElementType BOOLEAN_LITERAL = new HJsonElementType("BOOLEAN_LITERAL");
+  HJsonElementType JSON_STRING = new HJsonElementType("JSON_STRING");
+  HJsonElementType LITERAL = new HJsonElementType("LITERAL");
+  HJsonElementType MEMBER = new HJsonElementType("MEMBER");
+  HJsonElementType MEMBER_VALUE = new HJsonElementType("MEMBER_VALUE");
+  HJsonElementType MULTILINE_STRING = new HJsonElementType("MULTILINE_STRING");
+  HJsonElementType NULL_LITERAL = new HJsonElementType("NULL_LITERAL");
+  HJsonElementType NUMBER_LITERAL = new HJsonElementType("NUMBER_LITERAL");
+  HJsonElementType OBJECT = new HJsonElementType("OBJECT");
+  HJsonElementType OBJECT_FULL = new HJsonElementType("OBJECT_FULL");
+  HJsonElementType QUOTELESS_STRING = new HJsonElementType("QUOTELESS_STRING");
+  HJsonElementType STRING_LITERAL = new HJsonElementType("STRING_LITERAL");
+  HJsonElementType VALUE = new HJsonElementType("VALUE");
 
-  IElementType BLOCK_COMMENT = new HJsonTokenType("BLOCK_COMMENT");
-  IElementType COLON = new HJsonTokenType(":");
-  IElementType COMMA = new HJsonTokenType(",");
-  IElementType DOUBLE_QUOTE = new HJsonTokenType("\"");
-  IElementType DOUBLE_QUOTED_STRING = new HJsonTokenType("DOUBLE_QUOTED_STRING");
-  IElementType FALSE = new HJsonTokenType("false");
-  IElementType LINE_COMMENT = new HJsonTokenType("LINE_COMMENT");
-  IElementType L_BRACKET = new HJsonTokenType("[");
-  IElementType L_CURLY = new HJsonTokenType("{");
-  IElementType MULTILINE_STRING_TOKEN = new HJsonTokenType("MULTILINE_STRING_TOKEN");
-  IElementType NULL = new HJsonTokenType("null");
-  IElementType NUMBER = new HJsonTokenType("NUMBER");
-  IElementType QUOTELESS_STRING = new HJsonTokenType("QUOTELESS_STRING");
-  IElementType R_BRACKET = new HJsonTokenType("]");
-  IElementType R_CURLY = new HJsonTokenType("}");
-  IElementType SINGLE_QUOTE = new HJsonTokenType("'");
-  IElementType SINGLE_QUOTED_STRING = new HJsonTokenType("SINGLE_QUOTED_STRING");
-  IElementType TRUE = new HJsonTokenType("true");
+  HJsonTokenType BLOCK_COMMENT_TOKEN = new HJsonTokenType("BLOCK_COMMENT_TOKEN");
+  HJsonTokenType COLON = new HJsonTokenType(":");
+  HJsonTokenType COMMA = new HJsonTokenType(",");
+  HJsonTokenType DOUBLE_QUOTE = new HJsonTokenType("\"");
+  HJsonTokenType DOUBLE_QUOTED_STRING_TOKEN = new HJsonTokenType("DOUBLE_QUOTED_STRING_TOKEN");
+  HJsonTokenType FALSE = new HJsonTokenType("false");
+  HJsonTokenType LINE_COMMENT_TOKEN = new HJsonTokenType("LINE_COMMENT_TOKEN");
+  HJsonTokenType L_BRACKET = new HJsonTokenType("[");
+  HJsonTokenType L_CURLY = new HJsonTokenType("{");
+  HJsonTokenType MEMBER_NAME = new HJsonTokenType("MEMBER_NAME");
+  HJsonTokenType MULTILINE_STRING_TOKEN = new HJsonTokenType("MULTILINE_STRING_TOKEN");
+  HJsonTokenType NULL = new HJsonTokenType("null");
+  HJsonTokenType NUMBER_TOKEN = new HJsonTokenType("NUMBER_TOKEN");
+  HJsonTokenType QUOTELESS_STRING_TOKEN = new HJsonTokenType("QUOTELESS_STRING_TOKEN");
+  HJsonTokenType R_BRACKET = new HJsonTokenType("]");
+  HJsonTokenType R_CURLY = new HJsonTokenType("}");
+  HJsonTokenType SINGLE_QUOTE = new HJsonTokenType("'");
+  HJsonTokenType SINGLE_QUOTED_STRING_TOKEN = new HJsonTokenType("SINGLE_QUOTED_STRING_TOKEN");
+  HJsonTokenType TRUE = new HJsonTokenType("true");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -58,9 +57,6 @@ public interface HJsonElementTypes {
       }
       else if (type == MEMBER) {
         return new HJsonMemberImpl(node);
-      }
-      else if (type == MEMBER_NAME) {
-        return new HJsonMemberNameImpl(node);
       }
       else if (type == MEMBER_VALUE) {
         return new HJsonMemberValueImpl(node);
@@ -80,11 +76,8 @@ public interface HJsonElementTypes {
       else if (type == OBJECT_FULL) {
         return new HJsonObjectFullImpl(node);
       }
-      else if (type == QUOTE_LESS_PART_STRING) {
-        return new HJsonQuoteLessPartStringImpl(node);
-      }
-      else if (type == QUOTE_LESS_STRING) {
-        return new HJsonQuoteLessStringImpl(node);
+      else if (type == QUOTELESS_STRING) {
+        return new HJsonQuotelessStringImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }

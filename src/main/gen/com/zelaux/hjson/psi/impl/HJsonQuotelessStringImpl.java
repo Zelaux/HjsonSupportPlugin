@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.zelaux.hjson.HJsonElementTypes.*;
 import com.zelaux.hjson.psi.*;
 
-public class HJsonQuoteLessStringImpl extends HJsonStringLiteralImpl implements HJsonQuoteLessString {
+public class HJsonQuotelessStringImpl extends HJsonStringLiteralImpl implements HJsonQuotelessString {
 
-  public HJsonQuoteLessStringImpl(ASTNode node) {
+  public HJsonQuotelessStringImpl(ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull HJsonElementVisitor visitor) {
-    visitor.visitQuoteLessString(this);
+    visitor.visitQuotelessString(this);
   }
 
   @Override
@@ -29,8 +29,8 @@ public class HJsonQuoteLessStringImpl extends HJsonStringLiteralImpl implements 
 
   @Override
   @NotNull
-  public List<HJsonQuoteLessPartString> getQuoteLessPartStringList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, HJsonQuoteLessPartString.class);
+  public PsiElement getQuotelessStringToken() {
+    return findNotNullChildByType(QUOTELESS_STRING_TOKEN);
   }
 
 }

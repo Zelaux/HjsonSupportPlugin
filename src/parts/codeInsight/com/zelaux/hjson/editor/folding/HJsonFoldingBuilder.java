@@ -25,7 +25,7 @@ public class HJsonFoldingBuilder implements FoldingBuilder, DumbAware {
         final IElementType type = node.getElementType();
         if ((type == HJsonElementTypes.OBJECT_FULL || type == HJsonElementTypes.ARRAY) && spanMultipleLines(node, document)) {
             descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
-        } else if (type == HJsonElementTypes.BLOCK_COMMENT) {
+        } else if (type == HJsonElementTypes.BLOCK_COMMENT_TOKEN) {
             descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
         } else if (type == HJsonElementTypes.MULTILINE_STRING_TOKEN) {
             String nodeText = node.getText();
@@ -34,7 +34,7 @@ public class HJsonFoldingBuilder implements FoldingBuilder, DumbAware {
                 i = nodeText.indexOf('\n', i);
             }
             if (i != -1) descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
-        } else if (type == HJsonElementTypes.LINE_COMMENT) {
+        } else if (type == HJsonElementTypes.LINE_COMMENT_TOKEN) {
             final Couple<PsiElement> commentRange = expandLineCommentsRange(node.getPsi());
             final int startOffset = commentRange.getFirst().getTextRange().getStartOffset();
             final int endOffset = commentRange.getSecond().getTextRange().getEndOffset();
@@ -94,9 +94,9 @@ public class HJsonFoldingBuilder implements FoldingBuilder, DumbAware {
             return "{...}";
         } else if (type == HJsonElementTypes.ARRAY) {
             return "[...]";
-        } else if (type == HJsonElementTypes.LINE_COMMENT) {
+        } else if (type == HJsonElementTypes.LINE_COMMENT_TOKEN) {
             return "//...";
-        } else if (type == HJsonElementTypes.BLOCK_COMMENT) {
+        } else if (type == HJsonElementTypes.BLOCK_COMMENT_TOKEN) {
             return "/*...*/";
         } else if (type == HJsonElementTypes.MULTILINE_STRING_TOKEN) {
             int startOffset = node.getStartOffset();

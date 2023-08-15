@@ -10,12 +10,9 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.PlatformIcons;
 import com.zelaux.hjson.HJsonLanguage;
-import com.zelaux.hjson.HJsonParserDefinition;
 import com.zelaux.hjson.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,15 +31,26 @@ public class HJsonPsiImplUtils {
 
     @NotNull
     public static String getName(@NotNull HJsonMember property) {
-        return property.getMemberName().getName();
+        String text = property.getMemberName().getText();
+        return StringUtil.unescapeStringCharacters(HJsonPsiUtil.stripQuotes(text));
     }
 
-    @NotNull
+/*    @NotNull
     public static String getName(@NotNull HJsonMemberName memberName) {
-        return StringUtil.unescapeStringCharacters(HJsonPsiUtil.stripQuotes(memberName.getStringLiteral().getText()));
-    }
-/*
-    *//**
+        HJsonJsonString jsonString = memberName.getJsonString();
+        String text;
+        if (jsonString == null) {
+            text = memberName.getMemberNameToken().getText();
+        } else {
+            text = jsonString.getText();
+        }
+        return StringUtil.unescapeStringCharacters(HJsonPsiUtil.stripQuotes(text));
+    }*/
+
+    /*
+     */
+
+    /**
      * Actually only JSON string literal should be accepted as valid name of property according to standard,
      * but for compatibility with JavaScript integration any JSON literals as well as identifiers (unquoted words)
      * are possible and highlighted as error later.
@@ -55,10 +63,10 @@ public class HJsonPsiImplUtils {
         assert firstChild instanceof HJsonStringLiteral;
         return (HJsonStringLiteral) firstChild;
     }*/
-@Nullable
+    @Nullable
     public static HJsonValue getValue(@NotNull HJsonMember property) {
-    HJsonMemberValue memberValue = property.getMemberValue();
-    return memberValue==null?null:memberValue.getValue();
+        HJsonMemberValue memberValue = property.getMemberValue();
+        return memberValue == null ? null : memberValue.getValue();
     }
 /*
     public static boolean isQuotedString(@NotNull HJsonLiteral literal) {
@@ -240,7 +248,7 @@ public class HJsonPsiImplUtils {
             newLines[0] = lines[0].substring(3);
         }
         for (int i = 0; i < newLines.length; i++) {
-            String line = lines[i+startOffset];
+            String line = lines[i + startOffset];
             Matcher matcher = nonSpacePattern.matcher(line);
             int foundIndex = line.length() - 1;
             if (matcher.find()) {

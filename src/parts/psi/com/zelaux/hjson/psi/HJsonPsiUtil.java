@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.zelaux.hjson.HJsonParserDefinition.HJSON_COMMENTARIES;
+import static com.zelaux.hjson.psi.HJsonTokens.COMMENTARIES;
 
 
 public class HJsonPsiUtil {
@@ -39,7 +39,7 @@ public class HJsonPsiUtil {
      * @return whether this PSI element is property key
      */
     public static boolean isPropertyKey(@NotNull PsiElement element) {
-        return element instanceof HJsonMemberName;
+        return element!=null && element.getNode().getElementType()==HJsonElementTypes.MEMBER_NAME;
     }
 
     /**
@@ -74,11 +74,11 @@ public class HJsonPsiUtil {
                 lastSeen = node;
             }
             else if (elementType == TokenType.WHITE_SPACE) {
-                if (expectedType == HJsonElementTypes.LINE_COMMENT && node.getText().indexOf('\n', 1) != -1) {
+                if (expectedType == HJsonElementTypes.LINE_COMMENT_TOKEN && node.getText().indexOf('\n', 1) != -1) {
                     break;
                 }
             }
-            else if (!HJSON_COMMENTARIES.contains(elementType) || HJSON_COMMENTARIES.contains(expectedType)) {
+            else if (!COMMENTARIES.contains(elementType) || COMMENTARIES.contains(expectedType)) {
                 break;
             }
             node = after ? node.getTreeNext() : node.getTreePrev();

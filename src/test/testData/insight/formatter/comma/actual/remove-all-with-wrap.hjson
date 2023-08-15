@@ -13,7 +13,7 @@ object: {
   three: 2
 }
 version: 0.0
-boolean: false,
+boolean: false
 boolean2: true
 number: 013213e-1
 strings: [

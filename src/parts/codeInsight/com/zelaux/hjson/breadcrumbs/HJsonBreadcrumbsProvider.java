@@ -9,7 +9,6 @@ import com.jetbrains.jsonSchema.impl.JsonSchemaDocumentationProvider;
 import com.zelaux.hjson.HJsonLanguage;
 import com.zelaux.hjson.psi.HJsonArray;
 import com.zelaux.hjson.psi.HJsonMember;
-import com.zelaux.hjson.psi.HJsonMemberName;
 import com.zelaux.hjson.util.HJsonUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

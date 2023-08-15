@@ -30,6 +30,7 @@ public class PrintVisitor extends HJsonRecursiveElementVisitor {
         stream.print(o.getText());
     }
 
+
     @Override
     public void visitArray(@NotNull HJsonArray o) {
         stream.println("[");
@@ -91,13 +92,13 @@ public class PrintVisitor extends HJsonRecursiveElementVisitor {
     }
 
     private static boolean needComma(HJsonValue value) {
-        return !(value instanceof HJsonQuoteLessString);
+        return !(value instanceof HJsonQuotelessString);
     }
 
     @Override
     public void visitMember(@NotNull HJsonMember o) {
 
-        o.getMemberName().accept(this);
+        stream.print(o.getMemberName().getText());
         stream.print(": ");
         o.getValue().accept(this);
     }

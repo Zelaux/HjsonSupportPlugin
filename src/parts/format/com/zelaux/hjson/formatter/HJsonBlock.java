@@ -19,7 +19,7 @@ import java.util.List;
 
 import static com.zelaux.hjson.HJsonElementTypes.*;
 import static com.zelaux.hjson.HJsonElementTypes.MEMBER;
-import static com.zelaux.hjson.HJsonParserDefinition.HJSON_CONTAINERS;
+import static com.zelaux.hjson.psi.HJsonTokens.HJSON_CONTAINERS;
 import static com.zelaux.hjson.formatter.HJsonCodeStyleSettings.ALIGN_PROPERTY_ON_COLON;
 import static com.zelaux.hjson.formatter.HJsonCodeStyleSettings.ALIGN_PROPERTY_ON_VALUE;
 import static com.zelaux.hjson.psi.HJsonPsiUtil.hasElementType;

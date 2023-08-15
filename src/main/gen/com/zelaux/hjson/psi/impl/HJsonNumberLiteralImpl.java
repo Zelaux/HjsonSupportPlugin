@@ -28,6 +28,12 @@ public class HJsonNumberLiteralImpl extends HJsonLiteralImpl implements HJsonNum
   }
 
   @Override
+  @NotNull
+  public PsiElement getNumberToken() {
+    return findNotNullChildByType(NUMBER_TOKEN);
+  }
+
+  @Override
   public double getValue() {
     return HJsonPsiImplUtils.getValue(this);
   }

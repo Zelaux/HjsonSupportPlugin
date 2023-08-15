@@ -29,14 +29,14 @@ public class HJsonJsonStringImpl extends HJsonStringLiteralImpl implements HJson
 
   @Override
   @Nullable
-  public PsiElement getDoubleQuotedString() {
-    return findChildByType(DOUBLE_QUOTED_STRING);
+  public PsiElement getDoubleQuotedStringToken() {
+    return findChildByType(DOUBLE_QUOTED_STRING_TOKEN);
   }
 
   @Override
   @Nullable
-  public PsiElement getSingleQuotedString() {
-    return findChildByType(SINGLE_QUOTED_STRING);
+  public PsiElement getSingleQuotedStringToken() {
+    return findChildByType(SINGLE_QUOTED_STRING_TOKEN);
   }
 
 }

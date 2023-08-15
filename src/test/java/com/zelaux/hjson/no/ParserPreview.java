@@ -1,15 +1,17 @@
-package com.zelaux.hjson;
+package com.zelaux.hjson.no;
 
 import com.intellij.psi.PsiFile;
+import com.zelaux.hjson.HJsonParserTest;
 import com.zelaux.hjson.psi.visitors.PrintVisitor;
-import org.junit.Assert;
 import org.junit.Test;
 
-public class HardCodeTest extends HJsonParserTest{
+@SuppressWarnings("NewClassNamingConvention")
+public class ParserPreview extends HJsonParserTest {
     @Override
     @Test
     public void testParsingTestData() {
-        PsiFile file = parseFile("dummy.hjson", "it1: it2\n: it4");
+        PsiFile file = parseFile("dummy.hjson", "[1,]");
+        System.out.println(file.getFirstChild().getLastChild().getPrevSibling());
         System.out.println(toParseTreeText(file, false, true));
         try {
             PrintVisitor visitor = new PrintVisitor();
@@ -18,6 +20,6 @@ public class HardCodeTest extends HJsonParserTest{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Assert.fail();
+//        Assert.fail();
     }
 }

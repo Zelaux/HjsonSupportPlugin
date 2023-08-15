@@ -37,14 +37,13 @@ public class HJsonFactory {
      * @param content properly escaped text of JSON value, e.g. Java literal {@code "\"new\\nline\""} if you want to create string literal
      * @param <T>     type of the JSON value desired
      * @return element created from given text
-     *
      * @see #createJsonStringLiteral(String)
      */
     @NotNull
     public <T extends HJsonValue> T createValue(@NotNull String content) {
         final PsiFile file = createDummyFile("{\"foo\": " + content + "}");
         //noinspection unchecked,ConstantConditions
-        return (T)((HJsonObject)file.getFirstChild()).getMemberList().get(0).getValue();
+        return (T) ((HJsonObject) file.getFirstChild()).getMemberList().get(0).getValue();
     }
 
     @NotNull
@@ -61,9 +60,10 @@ public class HJsonFactory {
      */
     @NotNull
     public HJsonJsonString createJsonStringLiteral(@NotNull String unescapedContent) {
-        return createJsonStringLiteral('"',unescapedContent);
+        return createJsonStringLiteral('"', unescapedContent);
     }
-    public HJsonJsonString createJsonStringLiteral(char quote,@NotNull String unescapedContent) {
+
+    public HJsonJsonString createJsonStringLiteral(char quote, @NotNull String unescapedContent) {
         return createValue(quote + StringUtil.escapeStringCharacters(unescapedContent) + quote);
     }
 
@@ -75,7 +75,23 @@ public class HJsonFactory {
 
     @NotNull
     public PsiElement createComma() {
-        final HJsonArray jsonArray1 = createValue("[1, 2]");
-        return jsonArray1.getValueList().get(0).getNextSibling();
+        final @NotNull PsiFile file = createDummyFile("[1,]");
+        return file.getFirstChild()//<<array>>
+                .getLastChild()//']'
+                .getPrevSibling()//','
+                ;
+    }
+
+    public PsiElement createMemberName(String s) {
+        PsiFile file;
+        if (s.contains(" ")) {
+            file = createDummyFile("\"" + s + "\":nil");
+        } else {
+            file = createDummyFile(s + ":nil");
+        }
+        return file.getFirstChild()//<<object>>
+                .getFirstChild()//<<member>
+                .getFirstChild()//memberNameToken
+                ;
     }
 }

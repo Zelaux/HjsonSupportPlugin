@@ -6,7 +6,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
 import com.zelaux.hjson.psi.HJsonMember;
-import com.zelaux.hjson.psi.HJsonMemberName;
+
 import com.zelaux.hjson.psi.HJsonValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,9 +27,9 @@ public class HJsonMemberNameReference  implements PsiReference {
     @NotNull
     @Override
     public TextRange getRangeInElement() {
-        final @NotNull HJsonMemberName nameElement = myMember.getMemberName();
+        final @NotNull PsiElement nameElement = myMember.getMemberName();
         // Either value of string with quotes stripped or element's text as is
-        return ElementManipulators.getValueTextRange(nameElement.getStringLiteral());
+        return ElementManipulators.getValueTextRange(nameElement);
     }
 
     @Nullable

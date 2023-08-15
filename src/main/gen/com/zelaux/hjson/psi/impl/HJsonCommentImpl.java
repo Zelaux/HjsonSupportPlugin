@@ -29,14 +29,14 @@ public class HJsonCommentImpl extends ASTWrapperPsiElement implements HJsonComme
 
   @Override
   @Nullable
-  public PsiElement getBlockComment() {
-    return findChildByType(BLOCK_COMMENT);
+  public PsiElement getBlockCommentToken() {
+    return findChildByType(BLOCK_COMMENT_TOKEN);
   }
 
   @Override
   @Nullable
-  public PsiElement getLineComment() {
-    return findChildByType(LINE_COMMENT);
+  public PsiElement getLineCommentToken() {
+    return findChildByType(LINE_COMMENT_TOKEN);
   }
 
 }

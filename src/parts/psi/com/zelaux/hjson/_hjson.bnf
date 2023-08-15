@@ -12,6 +12,9 @@
     psiImplUtilClass = 'com.zelaux.hjson.psi.impl.HJsonPsiImplUtils'
     tokenTypeClass = 'com.zelaux.hjson.HJsonTokenType'
 
+    generate=[exact-types="all"]
+
+//    (".*")="com.zelaux.hjson.HJsonElementTypes"
     implements(".*") = "com.zelaux.hjson.psi.HJsonElement"
     extends("value|object") = "com.zelaux.hjson.psi.impl.HJsonElementImpl"
 
@@ -25,8 +28,8 @@
 
         COMMA=','
         COLON=':'
-        LINE_COMMENT='regexp:(//|#).*'
-        BLOCK_COMMENT='regexp:/\*([^*]|\*+[^*/])*(\*+/)'
+        LINE_COMMENT_TOKEN='regexp:(//|#).*'
+        BLOCK_COMMENT_TOKEN='regexp:/\*([^*]|\*+[^*/])*(\*+/)'
 
         TRUE="true"
         FALSE="false"
@@ -34,16 +37,17 @@
 //        NEW_LINE="regexp:\n"
         WHITE_SPACE="regexp:[\f\r\t\v ]+"
 
-        NUMBER='regexp:-?(0|\d+)(\.\d+)?([Ee][+-]?\d+)?'
+        NUMBER_TOKEN='regexp:-?(0|\d+)(\.\d+)?([Ee][+-]?\d+)?'
 
 //        JSON_STRING="regexp:(\"[^\"\n]*\"|'[^\'\n]*')"
 //        JSON_STRING_SPECIAL_LETTER="regexp:\\(\"|'|\\|/|b|f|n|r|t|([uU][0-9a-fA-F]{4}))"
 //        JSON_STRING_OTHER="regexp:[^\"'\n]+"
 //        QUOTELESS_STRING="regexp:[^\"'\n\s{}:,\[\]]+"
         MULTILINE_STRING_TOKEN="regexp:'''([^']*('{1,2}[^'])*)+'''"
-        DOUBLE_QUOTED_STRING="regexp:\"([^\\\"\r\n]|\\[^\r\n])*\"?"
-        SINGLE_QUOTED_STRING="regexp:'([^\\\'\r\n]|\\[^\r\n])*'?"
-        QUOTELESS_STRING="regexp:[^'\"\f\n\r\t:,/\\\[\]{}\s\d]([^\\'\"\f\n\r\t:,\[\]{}]*[^\\'\"\f\n\r\t:,\[\]{}\s])?"
+        DOUBLE_QUOTED_STRING_TOKEN="regexp:\"([^\\\"\r\n]|\\[^\r\n])*\"?"
+        SINGLE_QUOTED_STRING_TOKEN="regexp:'([^\\\'\r\n]|\\[^\r\n])*'?"
+        QUOTELESS_STRING_TOKEN="regexp:[^'\"\f\n\r\t:,/\\\[\]{}\s\d]([^\\'\"\f\n\r\t:,\[\]{}]*[^\\'\"\f\n\r\t:,\[\]{}\s])?"
+        MEMBER_NAME="regexp:[^'\",:\[\]{}\s][^,:\[\]{}\s]*"
 
 //        SEPARATOR_TOKEN="regexp:[\s\n]*([,\n])[\s\n]*"
 
@@ -61,10 +65,10 @@
     ]
 }
 
-hjson::=object_full|object
+hjson::=literal | array | object_full | object
  value::= array|object_full|literal
 literal::=number_literal|boolean_literal|null_literal|string_literal
-fake comment::= (LINE_COMMENT NEW_LINE) | BLOCK_COMMENT
+fake comment::= (LINE_COMMENT_TOKEN NEW_LINE) | BLOCK_COMMENT_TOKEN
 /*comment_statement::=*/
 
 object_full::= '{' (member (COMMA? member)* COMMA?)? '}'{
@@ -83,7 +87,7 @@ object::=(member (COMMA? member)* COMMA?)?{
 //  recoverWhile = not_brace_or_next_value
   mixin="com.zelaux.hjson.psi.impl.HJsonObjectMixin"
 }
-member::= member_name  COLON? member_value?{
+member::= MEMBER_NAME  COLON? member_value?{
   pin=1
   methods=[
     getName
@@ -94,14 +98,14 @@ member::= member_name  COLON? member_value?{
   ]
   mixin="com.zelaux.hjson.psi.impl.HJsonMemberMixin"
   //pin(".*")=1
-}
-member_name::= quote_less_part_string|json_string{
+}/*
+member_name::= MEMBER_NAME_TOKEN|json_string | NUMBER_TOKEN{
     methods=[
 //    nameElement="/expr[0]"
-//        getNameElement
+        getNameElement
         getName
     ]
-}
+}*/
 member_value::=value
 
 array::= '['( value COMMA? )* ']'?{
@@ -109,7 +113,7 @@ array::= '['( value COMMA? )* ']'?{
     //pin=1
 }
 
-number_literal ::=  NUMBER  {
+number_literal ::=  NUMBER_TOKEN  {
   methods=[
     NUMBER=""
     getValue
@@ -123,7 +127,7 @@ boolean_literal ::=  TRUE | FALSE  {
 null_literal ::=  NULL
 
 
-string_literal::=json_string | quote_less_string|multiline_string{
+string_literal::=json_string | quoteless_string|multiline_string{
  methods=[
     getTextFragments
     getValue
@@ -135,11 +139,10 @@ string_literal::=json_string | quote_less_string|multiline_string{
   mixin="com.zelaux.hjson.psi.impl.HJsonStringLiteralMixin"
 }
 
-quote_less_string::=quote_less_part_string (COLON quote_less_part_string)*
-quote_less_part_string::=QUOTELESS_STRING
+quoteless_string::=QUOTELESS_STRING_TOKEN
 
 multiline_string::= MULTILINE_STRING_TOKEN
-json_string::=DOUBLE_QUOTED_STRING | SINGLE_QUOTED_STRING
+json_string::=DOUBLE_QUOTED_STRING_TOKEN | SINGLE_QUOTED_STRING_TOKEN
 
 //special_letter::=JSON_STRING_SPECIAL_LETTER
 //simple_letter::= QUOTELESS_STRING

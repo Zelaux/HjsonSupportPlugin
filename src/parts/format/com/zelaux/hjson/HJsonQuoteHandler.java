@@ -11,13 +11,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 import com.zelaux.hjson.psi.HJsonStringLiteral;
+import com.zelaux.hjson.psi.HJsonTokens;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class HJsonQuoteHandler extends SimpleTokenSetQuoteHandler implements MultiCharQuoteHandler {
     public HJsonQuoteHandler() {
-        super(HJsonElementTypes.DOUBLE_QUOTED_STRING, HJsonElementTypes.SINGLE_QUOTED_STRING, HJsonElementTypes.MULTILINE_STRING_TOKEN);
+        super(TokenSet.andNot(HJsonTokens.STRING_TOKENS, TokenSet.create(HJsonElementTypes.QUOTELESS_STRING_TOKEN)));
     }
 
     @Nullable
@@ -31,7 +33,7 @@ public class HJsonQuoteHandler extends SimpleTokenSetQuoteHandler implements Mul
             }
         }//DONT WORK FOR '''
 
-        return tokenType == HJsonElementTypes.SINGLE_QUOTED_STRING ? "'" : (tokenType == HJsonElementTypes.DOUBLE_QUOTED_STRING ? "\"" : "'''");
+        return tokenType == HJsonElementTypes.SINGLE_QUOTED_STRING_TOKEN ? "'" : (tokenType == HJsonElementTypes.DOUBLE_QUOTED_STRING_TOKEN ? "\"" : "'''");
     }
 
     @Override

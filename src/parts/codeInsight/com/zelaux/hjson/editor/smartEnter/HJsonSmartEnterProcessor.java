@@ -84,19 +84,19 @@ public class HJsonSmartEnterProcessor extends SmartEnterProcessorWithFixers {
                     }
                 }
                 else {
-                    final HJsonValue propertyKey = ((HJsonMember)element).getMemberName().getStringLiteral();
+                    final  PsiElement propertyKey = ((HJsonMember)element).getMemberName();
                     TextRange keyRange = propertyKey.getTextRange();
                     final int keyStartOffset = keyRange.getStartOffset();
                     int keyEndOffset = keyRange.getEndOffset();
                     //processor.myFirstErrorOffset = keyEndOffset;
                     if (terminatedOnCurrentLine(editor, propertyKey) && !isFollowedByTerminal(propertyKey, COLON)) {
                         boolean shouldQuoteKey = /*propertyKey instanceof HJsonReferenceExpression && JsonDialectUtil.isStandardJson(propertyKey)*/false;
-                        if (shouldQuoteKey) {
+                        /*if (shouldQuoteKey) {
                             editor.getDocument().insertString(keyStartOffset, "\"");
                             keyEndOffset++;
                             editor.getDocument().insertString(keyEndOffset, "\"");
                             keyEndOffset++;
-                        }
+                        }*/
                         processor.myFirstErrorOffset = keyEndOffset + 2;
                         editor.getDocument().insertString(keyEndOffset, ": ");
                     }

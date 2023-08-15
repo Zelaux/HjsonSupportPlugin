@@ -5,6 +5,7 @@ import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.zelaux.hjson.HJsonBundle;
 import com.zelaux.hjson.psi.*;
@@ -19,27 +20,11 @@ public class HJsonMemberNameValidator extends LocalInspectionTool {
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
         return new HJsonElementVisitor() {
-            @Override
-            public void visitMemberName(@NotNull HJsonMemberName o) {
-                HJsonStringLiteral nameElement = o.getStringLiteral();
-                if (nameElement instanceof HJsonQuoteLessString) {
-                    String value = nameElement.getValue();
-                    Matcher matcher = spacePattern.matcher(value);
 
-                    if (matcher.find()) {
-                        int start = matcher.start();
-                        int end = matcher.end();
-                        holder.registerProblem(nameElement, new TextRange(start, end), HJsonBundle.message("syntax.error.spaces-in-member-name"),
-        new ToString(true),
-        new ToString(false)
-                                );
-                    }
-                }
-            }
         };
     }
 
-    static class ToString implements LocalQuickFix {
+    /*static class ToString implements LocalQuickFix {
         public final boolean isDouble;
         public final char quote;
 
@@ -66,5 +51,5 @@ public class HJsonMemberNameValidator extends LocalInspectionTool {
                 element.replace(newElement);
             });
         }
-    }
+    }*/
 }

@@ -9,15 +9,15 @@ import com.intellij.navigation.ItemPresentation;
 
 public interface HJsonMember extends HJsonElement, PsiNamedElement {
 
-  @NotNull
-  HJsonMemberName getMemberName();
-
   @Nullable
   HJsonMemberValue getMemberValue();
 
+  @NotNull
+  PsiElement getMemberName();
+
   @NotNull String getName();
 
-  @Nullable HJsonValue getValue();
+  HJsonValue getValue();
 
   //WARNING: value(...) is skipped
   //matching value(HJsonMember, ...)

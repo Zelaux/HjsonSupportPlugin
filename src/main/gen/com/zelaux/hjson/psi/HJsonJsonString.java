@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface HJsonJsonString extends HJsonStringLiteral {
 
   @Nullable
-  PsiElement getDoubleQuotedString();
+  PsiElement getDoubleQuotedStringToken();
 
   @Nullable
-  PsiElement getSingleQuotedString();
+  PsiElement getSingleQuotedStringToken();
 
 }

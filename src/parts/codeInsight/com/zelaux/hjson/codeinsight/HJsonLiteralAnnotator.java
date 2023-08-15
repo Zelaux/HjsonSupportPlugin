@@ -11,7 +11,6 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.zelaux.hjson.HJsonBundle;
-import com.zelaux.hjson.psi.HJsonMemberName;
 import com.zelaux.hjson.psi.HJsonNumberLiteral;
 import com.zelaux.hjson.psi.HJsonPsiUtil;
 import com.zelaux.hjson.psi.HJsonStringLiteral;
@@ -29,9 +28,9 @@ public class HJsonLiteralAnnotator  implements Annotator {
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         /*List<HJsonLiteralChecker> extensions = HJsonLiteralChecker.EP_NAME.getExtensionList();*/
-        if (element instanceof HJsonMemberName) {
+        /*if (element instanceof HJsonMemberName) {
             highlightPropertyKey(element, holder);
-        }
+        }*/
         /*else if (element instanceof HJsonStringLiteral) {
             final HJsonStringLiteral stringLiteral = (HJsonStringLiteral)element;
             final int elementOffset = element.getTextOffset();

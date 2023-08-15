@@ -18,7 +18,6 @@ public abstract class HJsonStringLiteralImpl extends HJsonStringLiteralMixin imp
     super(node);
   }
 
-  @Override
   public void accept(@NotNull HJsonElementVisitor visitor) {
     visitor.visitStringLiteral(this);
   }

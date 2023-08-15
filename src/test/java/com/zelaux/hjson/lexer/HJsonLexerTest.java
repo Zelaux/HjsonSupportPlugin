@@ -2,7 +2,6 @@ package com.zelaux.hjson.lexer;
 
 import com.intellij.psi.TokenType;
 import com.zelaux.hjson.HJsonElementTypes;
-import com.zelaux.hjson.HJsonLexer;
 import org.junit.Assert;
 
 import static com.zelaux.hjson.lexer.HJsonLexerTest.TestCase.test;
@@ -13,12 +12,19 @@ public class HJsonLexerTest {
             test("true", entry(HJsonElementTypes.TRUE, "true", 0, 4)),
             test("null", entry(HJsonElementTypes.NULL, "null", 0, 4)),
             test("false", entry(HJsonElementTypes.FALSE, "false", 0, 5)),
-            test("0 ",
-                    entry(HJsonElementTypes.NUMBER, "0", 0, 1),
+            test("4 ",
+                    entry(HJsonElementTypes.NUMBER_TOKEN, "4", 0, 1),
                     entry(TokenType.WHITE_SPACE, " ", 1, 2)
             ),
             test("0 ,",
-                    entry(HJsonElementTypes.QUOTELESS_STRING, "0 ,", 0, 3)
+//                    entry(HJsonElementTypes.QUOTELESS_STRING_TOKEN, "0 ,", 0, 3)
+                    entry(HJsonElementTypes.MEMBER_NAME,"0",0,1),
+                    entry(TokenType.WHITE_SPACE," ",1,2),
+                    entry(HJsonElementTypes.COMMA,",",2,3)
+            ),
+            test("123",
+//                    entry(HJsonElementTypes.QUOTELESS_STRING_TOKEN, "0 ,", 0, 3)
+                    entry(HJsonElementTypes.NUMBER_TOKEN,"123",0,3)
             ),
     };
 

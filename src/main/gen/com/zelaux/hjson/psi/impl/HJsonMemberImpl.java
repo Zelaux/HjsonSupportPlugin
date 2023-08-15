@@ -28,15 +28,15 @@ public class HJsonMemberImpl extends HJsonMemberMixin implements HJsonMember {
   }
 
   @Override
-  @NotNull
-  public HJsonMemberName getMemberName() {
-    return findNotNullChildByClass(HJsonMemberName.class);
-  }
-
-  @Override
   @Nullable
   public HJsonMemberValue getMemberValue() {
     return findChildByClass(HJsonMemberValue.class);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getMemberName() {
+    return findNotNullChildByType(MEMBER_NAME);
   }
 
   @Override
@@ -45,7 +45,7 @@ public class HJsonMemberImpl extends HJsonMemberMixin implements HJsonMember {
   }
 
   @Override
-  public @Nullable HJsonValue getValue() {
+  public HJsonValue getValue() {
     return HJsonPsiImplUtils.getValue(this);
   }
 

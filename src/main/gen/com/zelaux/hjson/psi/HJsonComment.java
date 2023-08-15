@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface HJsonComment extends HJsonElement {
 
   @Nullable
-  PsiElement getBlockComment();
+  PsiElement getBlockCommentToken();
 
   @Nullable
-  PsiElement getLineComment();
+  PsiElement getLineCommentToken();
 
 }

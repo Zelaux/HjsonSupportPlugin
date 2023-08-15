@@ -44,8 +44,8 @@ public class HJsonLineWrapPositionStrategy extends DefaultLineWrapPositionStrate
         if (psiFile != null) {
             PsiElement currElement = psiFile.findElementAt(offset);
             final IElementType elementType = PsiUtilCore.getElementType(currElement);
-            if (elementType == HJsonElementTypes.DOUBLE_QUOTED_STRING
-                    || elementType == HJsonElementTypes.SINGLE_QUOTED_STRING
+            if (elementType == HJsonElementTypes.DOUBLE_QUOTED_STRING_TOKEN
+                    || elementType == HJsonElementTypes.SINGLE_QUOTED_STRING_TOKEN
                     || elementType == HJsonElementTypes.QUOTELESS_STRING
                     || elementType == HJsonElementTypes.LITERAL
                     || elementType == HJsonElementTypes.BOOLEAN_LITERAL

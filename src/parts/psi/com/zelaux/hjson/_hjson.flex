@@ -22,7 +22,7 @@ import static com.zelaux.hjson.HJsonElementTypes.*;
 %type IElementType
 %unicode
 
-EOL=\R
+//EOL=\R
 WHITE_SPACE=[\s]+
 
 LINE_COMMENT=("//"|#).*
@@ -33,14 +33,12 @@ SINGLE_QUOTED_STRING='([^\\'\r\n]|\\[^\r\n])*'?
 MULTILINE_STRING_TOKEN='''([^']*('{1,2}[^'])*)+(''')?
 //JSON_STRING_SPECIAL_LETTER=\\(\"|'|\\|\/|b|f|n|r|t|([uU][0-9a-fA-F]{4}))
 NUMBER=-?(0|\d+)(\.\d+)?([Ee][+-]?\d+)?
-QUOTELESS_STRING=([^'\"\s,:\[\]{}\-\d]|((-?(0|\d+)(\.\d+)?([Ee][+-]?\d+)?)[ \t]))[^\n:]*[^\s:]
-NEW_LINE=\s*\n\s*
+QUOTELESS_STRING=[^'\"\s,:\[\]{}][^,\s:]*
 
 %%
 <YYINITIAL> {
   {WHITE_SPACE}               { return WHITE_SPACE; }
 
-  //{NEW_LINE}                         { return NEW_LINE; }
   "{"                         { return L_CURLY; }
   "}"                         { return R_CURLY; }
   "'"                         { return SINGLE_QUOTE; }
@@ -52,16 +50,15 @@ NEW_LINE=\s*\n\s*
   "true"                      { return TRUE; }
   "false"                     { return FALSE; }
   "null"                      { return NULL; }
-   {QUOTELESS_STRING}                     { return QUOTELESS_STRING; }
-   {DOUBLE_QUOTED_STRING}                     { return DOUBLE_QUOTED_STRING; }
-   {SINGLE_QUOTED_STRING}                     { return SINGLE_QUOTED_STRING; }
+   {DOUBLE_QUOTED_STRING}                     { return DOUBLE_QUOTED_STRING_TOKEN; }
+   {SINGLE_QUOTED_STRING}                     { return SINGLE_QUOTED_STRING_TOKEN; }
    {MULTILINE_STRING_TOKEN}                     { return MULTILINE_STRING_TOKEN; }
 
-  {LINE_COMMENT}              { return LINE_COMMENT; }
-  {BLOCK_COMMENT}             { return BLOCK_COMMENT; }
-  //{JSON_STRING_SPECIAL_LETTER} {return JSON_STRING_SPECIAL_LETTER; }
-  {NUMBER}                    { return NUMBER; }
+  {LINE_COMMENT}              { return LINE_COMMENT_TOKEN; }
+  {BLOCK_COMMENT}             { return BLOCK_COMMENT_TOKEN; }
+  {NUMBER}                    { return NUMBER_TOKEN; }
 
+  {QUOTELESS_STRING}                     { return QUOTELESS_STRING_TOKEN; }
 }
 
 [^] { return BAD_CHARACTER; }

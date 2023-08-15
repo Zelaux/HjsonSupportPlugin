@@ -1,5 +1,6 @@
 package com.zelaux.hjson;
 
+import com.intellij.json.highlighting.JsonSyntaxHighlighterFactory;
 import com.intellij.lang.Language;
 import com.intellij.lexer.LayeredLexer;
 import com.intellij.lexer.Lexer;
@@ -15,6 +16,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import com.zelaux.hjson.lexer.HJsonLexer;
+import com.zelaux.hjson.psi.HJsonTokens;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,17 +67,12 @@ public class HJsonSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
             fillMap(ourAttributes, JSON_BRACKETS, HJsonElementTypes.L_BRACKET, HJsonElementTypes.R_BRACKET);
             fillMap(ourAttributes, JSON_COMMA, HJsonElementTypes.COMMA);
             fillMap(ourAttributes, JSON_COLON, HJsonElementTypes.COLON);
-            fillMap(ourAttributes, JSON_STRING,
-                    HJsonElementTypes.MULTILINE_STRING_TOKEN,
-                    HJsonElementTypes.SINGLE_QUOTED_STRING,
-                    HJsonElementTypes.DOUBLE_QUOTED_STRING,
-                    HJsonElementTypes.QUOTELESS_STRING
-            );
-            fillMap(ourAttributes, JSON_PARAMETER, HJsonElementTypes.MEMBER_NAME);
-            fillMap(ourAttributes, JSON_NUMBER, HJsonElementTypes.NUMBER);
-            fillMap(ourAttributes, JSON_KEYWORD, HJsonElementTypes.TRUE, HJsonElementTypes.FALSE, HJsonElementTypes.NULL);
-            fillMap(ourAttributes, JSON_LINE_COMMENT, HJsonElementTypes.LINE_COMMENT);
-            fillMap(ourAttributes, JSON_BLOCK_COMMENT, HJsonElementTypes.BLOCK_COMMENT);
+            fillMap(ourAttributes, JSON_STRING, HJsonTokens.STRING_TOKENS.getTypes());
+            fillMap(ourAttributes, JSON_PROPERTY_KEY, HJsonElementTypes.MEMBER_NAME);
+            fillMap(ourAttributes, JSON_NUMBER, HJsonElementTypes.NUMBER_TOKEN);
+            fillMap(ourAttributes, JSON_KEYWORD, HJsonTokens.KEYWORDS.getTypes());
+            fillMap(ourAttributes, JSON_LINE_COMMENT, HJsonElementTypes.LINE_COMMENT_TOKEN);
+            fillMap(ourAttributes, JSON_BLOCK_COMMENT, HJsonElementTypes.BLOCK_COMMENT_TOKEN);
             // TODO may be it's worth to add more sensible highlighting for identifiers
 //            fillMap(ourAttributes, JSON_IDENTIFIER, HJsonElementTypes.IDENTIFIER);
             fillMap(ourAttributes, HighlighterColors.BAD_CHARACTER, TokenType.BAD_CHARACTER);
@@ -93,7 +91,7 @@ public class HJsonSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
         public Lexer getHighlightingLexer() {
             LayeredLexer layeredLexer = new LayeredLexer(getLexer());
             boolean isPermissiveDialect = isPermissiveDialect();
-            layeredLexer.registerSelfStoppingLayer(new StringLiteralLexer('\"', HJsonElementTypes.DOUBLE_QUOTED_STRING, isCanEscapeEol(),
+            layeredLexer.registerSelfStoppingLayer(new StringLiteralLexer('\"', HJsonElementTypes.DOUBLE_QUOTED_STRING_TOKEN, isCanEscapeEol(),
                                                            isPermissiveDialect ? PERMISSIVE_ESCAPES : "/", false, isPermissiveDialect) {
                                                        @NotNull
                                                        @Override
@@ -106,9 +104,9 @@ public class HJsonSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
                                                            return isPermissiveDialect;
                                                        }
                                                    },
-                    new IElementType[]{HJsonElementTypes.DOUBLE_QUOTED_STRING}, IElementType.EMPTY_ARRAY);
-            layeredLexer.registerSelfStoppingLayer(new StringLiteralLexer('\'', HJsonElementTypes.SINGLE_QUOTED_STRING, isCanEscapeEol(),
-                                                           isPermissiveDialect ? PERMISSIVE_ESCAPES : "/", false, isPermissiveDialect){
+                    new IElementType[]{HJsonElementTypes.DOUBLE_QUOTED_STRING_TOKEN}, IElementType.EMPTY_ARRAY);
+            layeredLexer.registerSelfStoppingLayer(new StringLiteralLexer('\'', HJsonElementTypes.SINGLE_QUOTED_STRING_TOKEN, isCanEscapeEol(),
+                                                           isPermissiveDialect ? PERMISSIVE_ESCAPES : "/", false, isPermissiveDialect) {
                                                        @NotNull
                                                        @Override
                                                        protected IElementType handleSingleSlashEscapeSequence() {
@@ -125,7 +123,7 @@ public class HJsonSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
                                                            return super.getTokenType();
                                                        }
                                                    },
-                    new IElementType[]{HJsonElementTypes.SINGLE_QUOTED_STRING}, IElementType.EMPTY_ARRAY);
+                    new IElementType[]{HJsonElementTypes.SINGLE_QUOTED_STRING_TOKEN}, IElementType.EMPTY_ARRAY);
             return layeredLexer;
         }
 

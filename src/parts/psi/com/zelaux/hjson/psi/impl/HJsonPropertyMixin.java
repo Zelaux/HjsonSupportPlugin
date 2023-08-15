@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
     public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
         final HJsonFactory generator = new HJsonFactory(getProject());
         // Strip only both quotes in case user wants some exotic name like key'
-        getMemberName().getStringLiteral().replace(generator.createJsonStringLiteral(StringUtil.unquoteString(name)));
+        getMemberName().replace(generator.createMemberName(StringUtil.unquoteString(name)));
         return this;
     }
 

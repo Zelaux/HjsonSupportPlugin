@@ -103,7 +103,7 @@ public class HJsonCommaAdderProcessor implements PreFormatProcessor {
             {
                 PsiElement elem = element;
                 while (elem != null) {
-                    if (elem instanceof HJsonQuoteLessString) return false;
+                    if (elem instanceof HJsonQuotelessString) return false;
                     elem = elem.getLastChild();
                 }
             }

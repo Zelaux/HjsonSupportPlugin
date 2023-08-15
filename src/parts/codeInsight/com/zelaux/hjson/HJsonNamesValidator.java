@@ -3,6 +3,8 @@ package com.zelaux.hjson;
 import com.intellij.lang.refactoring.NamesValidator;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.IElementType;
+import com.zelaux.hjson.lexer.HJsonLexer;
+import com.zelaux.hjson.psi.HJsonTokens;
 import org.jetbrains.annotations.NotNull;
 
 public class HJsonNamesValidator implements NamesValidator {
@@ -12,7 +14,7 @@ public class HJsonNamesValidator implements NamesValidator {
     @Override
     public synchronized boolean isKeyword(@NotNull String name, Project project) {
         myLexer.start(name);
-        return HJsonParserDefinition.KEYWORDS.contains(myLexer.getTokenType()) && myLexer.getTokenEnd() == name.length();
+        return HJsonTokens.KEYWORDS.contains(myLexer.getTokenType()) && myLexer.getTokenEnd() == name.length();
     }
 
     @Override
@@ -28,8 +30,7 @@ public class HJsonNamesValidator implements NamesValidator {
         myLexer.start(name);
         IElementType type = myLexer.getTokenType();
 
-        return myLexer.getTokenEnd() == name.length() && (type == HJsonElementTypes.DOUBLE_QUOTED_STRING ||
-                type == HJsonElementTypes.SINGLE_QUOTED_STRING || type == HJsonElementTypes.QUOTELESS_STRING);
+        return myLexer.getTokenEnd() == name.length() && HJsonTokens.STRING_TOKENS.contains(type);
     }
 
 }
