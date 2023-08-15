@@ -1,12 +1,12 @@
 package com.zelaux.hjson.formatter.comma;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.java.JavaLanguage;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.impl.source.codeStyle.PostFormatProcessorHelper;
 import com.zelaux.hjson.HJsonElementTypes;
+import com.zelaux.hjson.HJsonLanguage;
 import com.zelaux.hjson.formatter.HJsonCodeStyleSettings;
 import com.zelaux.hjson.formatter.style.CommaState;
 import com.zelaux.hjson.psi.HJsonArray;
@@ -27,7 +27,7 @@ public class HJsonCommaRemoverVisitor extends HJsonRecursiveElementVisitor {
     private final PostFormatProcessorHelper myPostProcessor;
 
     public HJsonCommaRemoverVisitor(CodeStyleSettings settings) {
-        myPostProcessor = new PostFormatProcessorHelper(settings.getCommonSettings(JavaLanguage.INSTANCE));
+        myPostProcessor = new PostFormatProcessorHelper(settings.getCommonSettings(HJsonLanguage.INSTANCE));
         HJsonCodeStyleSettings customSettings = settings.getCustomSettings(HJsonCodeStyleSettings.class);
         this.commas = customSettings.commas();
         this.trailingComma = customSettings.trailingComma();

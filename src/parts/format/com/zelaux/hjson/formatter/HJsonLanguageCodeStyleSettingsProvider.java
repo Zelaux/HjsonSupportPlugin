@@ -70,8 +70,8 @@ public class HJsonLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
                     "PROPERTY_ALIGNMENT",
                     HJsonBundle.message("formatter.align.properties.caption"),
                     HJsonBundle.message("formatter.objects.label"),
-                    PropertyAlignment.info.ids,
-                    PropertyAlignment.info.descriptions);
+                    PropertyAlignment.info.descriptions,
+                    PropertyAlignment.info.ids);
 
         }
     }

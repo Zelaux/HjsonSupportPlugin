@@ -42,8 +42,8 @@ public class HJsonCodeStyleSettings extends CustomCodeStyleSettings {
     })
     @CommonCodeStyleSettings.WrapConstant
     public int ARRAY_WRAPPING = CommonCodeStyleSettings.WRAP_ALWAYS;
-    private int COMMAS = CommaState.KEEP.getId();
-    private int TRAILING_COMMA = CommaState.KEEP.id;
+    public int COMMAS = CommaState.REMOVE.id;
+    public int TRAILING_COMMA = CommaState.REMOVE.id;
 
     public HJsonCodeStyleSettings(CodeStyleSettings container) {
         super(HJsonLanguage.INSTANCE.getID(), container);
