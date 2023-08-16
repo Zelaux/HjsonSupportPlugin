@@ -2,7 +2,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
 <!--        <localInspection implementationClass="com.zelaux.hjson.inspections.HJsonMemberNameValidator" language="HJSON"/>-->
-        <localInspection language="HJSON" shortName="JsonDuplicatePropertyKeys"
+        <localInspection language="HJSON" shortName="РJsonDuplicatePropertyKeys"
                          bundle="messages.HJsonBundle" key="inspection.duplicate.keys.name" groupKey="hjson.inspection.group"
                          enabledByDefault="true" level="WARNING"
                 implementationClass="com.zelaux.hjson.codeinsight.HJsonDuplicatePropertyKeysInspection"/>

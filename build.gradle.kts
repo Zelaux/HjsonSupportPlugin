@@ -8,7 +8,7 @@ plugins {
 val arcVersion = "v141.1"
 
 group = "com.github.Zelaux"
-version = "1.0.0"
+version = "1.1.0"
 
 repositories {
     mavenCentral()
@@ -48,22 +48,12 @@ file("src/parts").listFiles()?.toMutableList().let { it ?: mutableListOf() }.als
         }
     }
 }
-tasks.register("copyPlugin") {
-    dependsOn("prepareSandbox")
-    doLast {
-//        FileUtils
-        copy {
-            from(File("build/idea-sandbox/ZelauxArcPlugin")) {
-                include("/**")
-            }
-            into(File("D:/my apps/IntelliJ IDEA Community Edition 2022.2/plugins/ZelauxArcPlugin"))
-            println(file("D:\\my apps\\IntelliJ IDEA Community Edition 2022.2\\plugins\\ZelauxArcPlugin").absolutePath)
-        }
-    }
-}
+
 tasks {
 
-
+    buildPlugin{
+        dependsOn(test)
+    }
     // Set the JVM compatibility versions
     withType<JavaCompile> {
         sourceCompatibility = "11"
@@ -81,7 +71,7 @@ tasks {
     this.getByName("postInstrumentCode").actions.clear();
     patchPluginXml {
         sinceBuild.set("222.3345.118")
-        untilBuild.set("232")
+        untilBuild.set("232.*")
     }
 
     signPlugin {

@@ -130,16 +130,53 @@ class HJsonFlexLexer implements FlexLexer {
                         IElementType next0 = myFlex.advance();
                         if (next0 == null) break;
                         if (next0 == WHITE_SPACE) {
+                            if (indexOf(buffer, myFlex.getTokenStart(), myFlex.getTokenEnd(), '\n') != -1) break;
                             IElementType next1 = myFlex.advance();
                             if (next1 == null) break;
                             if (next1 == QUOTELESS_STRING_TOKEN) {
-                                currentToken=QUOTELESS_STRING_TOKEN;
+                                currentToken = QUOTELESS_STRING_TOKEN;
                                 currentEnd = myFlex.getTokenEnd();
                                 currentState = myFlex.yystate();
                             } else {
                                 break;
                             }
-                        }
+                        } else if (next0 == COLON /*&& context.size()!=1*/) {
+                            if (context.size() > 1) {
+                                currentToken = MEMBER_NAME;
+                            } else {
+                                boolean valueIsQuotelesss = false;
+                                int state=0;
+                                while (state>=0) {
+
+                                    IElementType next1 = myFlex.advance();
+                                    if (next1 == null) break;
+                                    switch (state) {
+                                        case 0:
+                                            if (next1 == WHITE_SPACE) continue;
+                                            state++;
+                                            if (next1 == QUOTELESS_STRING_TOKEN) {
+                                                valueIsQuotelesss = true;
+                                            }
+                                            break;
+                                        case 1:
+                                            if(next1==COMMA || next1==WHITE_SPACE) {
+                                                if (!valueIsQuotelesss && next1 == COMMA) {
+                                                    state = -1;
+                                                } else if (valueIsQuotelesss && next1 == WHITE_SPACE && indexOf(buffer, myFlex.getTokenStart(), myFlex.getTokenEnd(), '\n') != -1) {
+                                                    state = -1;
+                                                }
+                                            } else{
+                                                valueIsQuotelesss=true;
+                                            }
+                                            break;
+                                    }
+                                }
+                                if(state==-1){
+                                    currentToken=MEMBER_NAME;
+                                }
+                            }
+                            break;
+                        } else break;
                     }
                 } catch (IOException ignore) {
                 }
