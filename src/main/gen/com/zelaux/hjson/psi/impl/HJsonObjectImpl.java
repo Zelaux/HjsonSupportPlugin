@@ -17,6 +17,7 @@ public class HJsonObjectImpl extends HJsonObjectMixin implements HJsonObject {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull HJsonElementVisitor visitor) {
     visitor.visitObject(this);
   }

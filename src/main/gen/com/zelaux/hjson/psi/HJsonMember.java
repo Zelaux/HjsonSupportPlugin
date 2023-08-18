@@ -17,7 +17,7 @@ public interface HJsonMember extends HJsonElement, PsiNamedElement {
 
   @NotNull String getName();
 
-  HJsonValue getValue();
+  @Nullable HJsonValue getValue();
 
   //WARNING: value(...) is skipped
   //matching value(HJsonMember, ...)

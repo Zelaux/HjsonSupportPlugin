@@ -17,7 +17,7 @@ public class HJsonStringLexerTest extends TestCase {
                     "  fals: bbb\n" +
                     "  fals: \"\\uffff \\d\\n\\uff\"\n" +
                     "}");
-        System.out.println("begin");
+//        System.out.println("begin");
         LexerResultEntry[] entries = {
                 new LexerResultEntry(StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN, "\\uffff", 35, 41),
                 new LexerResultEntry(StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN, "\\d", 42, 44),
@@ -43,7 +43,7 @@ public class HJsonStringLexerTest extends TestCase {
             i++;
             lexer.advance();
         }
-        System.out.println("end");
+//        System.out.println("end");
 
     }
 

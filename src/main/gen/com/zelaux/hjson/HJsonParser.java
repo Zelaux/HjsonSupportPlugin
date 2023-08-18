@@ -160,14 +160,13 @@ public class HJsonParser implements PsiParser, LightPsiParser {
   public static boolean member(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "member")) return false;
     if (!nextTokenIs(b, MEMBER_NAME)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, MEMBER, null);
+    boolean r;
+    Marker m = enter_section_(b);
     r = consumeToken(b, MEMBER_NAME);
-    p = r; // pin = 1
-    r = r && report_error_(b, member_1(b, l + 1));
-    r = p && member_2(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    r = r && member_1(b, l + 1);
+    r = r && member_2(b, l + 1);
+    exit_section_(b, m, MEMBER, r);
+    return r;
   }
 
   // COLON?

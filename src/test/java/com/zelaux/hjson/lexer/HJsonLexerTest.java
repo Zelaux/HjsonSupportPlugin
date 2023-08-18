@@ -23,13 +23,15 @@ public class HJsonLexerTest {
             ),
             test("0 ,",
 //                    entry(HJsonElementTypes.QUOTELESS_STRING_TOKEN, "0 ,", 0, 3)
-                    entry(HJsonElementTypes.MEMBER_NAME,"0",0,1),
-                    entry(TokenType.WHITE_SPACE," ",1,2),
-                    entry(HJsonElementTypes.COMMA,",",2,3)
+                    entry(HJsonElementTypes.MEMBER_NAME,"0 ,",0,3)
             ),
             test("123",
 //                    entry(HJsonElementTypes.QUOTELESS_STRING_TOKEN, "0 ,", 0, 3)
                     entry(HJsonElementTypes.NUMBER_TOKEN,"123",0,3)
+            ),
+            test("1 1",
+//                    entry(HJsonElementTypes.QUOTELESS_STRING_TOKEN, "0 ,", 0, 3)
+                    entry(HJsonElementTypes.QUOTELESS_STRING_TOKEN,"1 1",0,3)
             ),
             test("abc",
 //                    entry(HJsonElementTypes.QUOTELESS_STRING_TOKEN, "0 ,", 0, 3)
@@ -45,9 +47,10 @@ public class HJsonLexerTest {
     public void testHjsonParsing() {
 
         HJsonLexer lexer = new HJsonLexer();
-        for (TestCase testCase : cases) {
+        for (int caseIndex = 0; caseIndex < cases.length; caseIndex++) {
+            TestCase testCase = cases[caseIndex];
+            doPrint("case["+ caseIndex +"]{");
             lexer.start(testCase.data);
-            System.out.println("begin");
             LexerResultEntry[] entries = testCase.entries;
             int i = 0;
             while (lexer.getTokenType() != null) {
@@ -64,15 +67,19 @@ public class HJsonLexerTest {
                 LexerResultEntry expectedEntry = entries[i];
                 Assert.assertNotEquals("String lexer returns empty token(" + lexer.getTokenStart() + "," + lexer.getTokenEnd() + ")", "", entry.text);
                 Assert.assertEquals(expectedEntry, entry);
-                System.out.println("\t" + entry);
+                doPrint("\t" + entry);
                 i++;
                 lexer.advance();
             }
             if (i < entries.length) Assert.fail("Missing tokens " + (entries.length - i - 1)+"("+testCase.data+")");
-            System.out.println("end");
+            doPrint("}");
         }
 
 
+    }
+
+    private static void doPrint(String string) {
+//        System.out.println(string);
     }
 
     static class TestCase {

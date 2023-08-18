@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.zelaux.hjson.psi.HJsonTokens.COMMENTARIES;
+import static com.zelaux.hjson.psi.HJsonTokens.comments;
 
 
 public class HJsonPsiUtil {
@@ -78,7 +78,7 @@ public class HJsonPsiUtil {
                     break;
                 }
             }
-            else if (!COMMENTARIES.contains(elementType) || COMMENTARIES.contains(expectedType)) {
+            else if (!comments.contains(elementType) || comments.contains(expectedType)) {
                 break;
             }
             node = after ? node.getTreeNext() : node.getTreePrev();

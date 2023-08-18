@@ -1,10 +1,11 @@
-package com.zelaux.hjson;
+package com.zelaux.hjson.parser;
 
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.ParsingTestCase;
+import com.zelaux.hjson.HJsonParserDefinition;
 import com.zelaux.hjson.psi.HJsonElement;
 import com.zelaux.hjson.psi.HJsonMember;
 import com.zelaux.hjson.psi.HJsonObject;

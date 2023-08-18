@@ -45,7 +45,7 @@ public class HJsonMemberImpl extends HJsonMemberMixin implements HJsonMember {
   }
 
   @Override
-  public HJsonValue getValue() {
+  public @Nullable HJsonValue getValue() {
     return HJsonPsiImplUtils.getValue(this);
   }
 

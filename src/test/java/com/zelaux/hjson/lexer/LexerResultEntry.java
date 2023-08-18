@@ -4,7 +4,7 @@ import com.intellij.psi.tree.IElementType;
 
 import java.util.Objects;
 
-class LexerResultEntry {
+public class LexerResultEntry {
     public final IElementType tokenType;
     public final String text;
     public final int tokenStart;

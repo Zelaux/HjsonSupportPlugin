@@ -19,5 +19,5 @@ public interface HJsonTokens {
     TokenSet KEYWORDS = TokenSet.create(TRUE, FALSE, NULL);
     TokenSet HJSON_LITERALS = TokenSet.create(STRING_LITERAL, NUMBER_LITERAL, NULL_LITERAL, TRUE, FALSE);
     TokenSet HJSON_VALUES = TokenSet.orSet(HJSON_CONTAINERS, HJSON_LITERALS);
-    TokenSet COMMENTARIES = TokenSet.create(BLOCK_COMMENT_TOKEN, LINE_COMMENT_TOKEN);
+    TokenSet comments = TokenSet.create(BLOCK_COMMENT_TOKEN, LINE_COMMENT_TOKEN);
 }

@@ -44,7 +44,7 @@ public class HJsonParserDefinition extends HJsonASTFactory implements ParserDefi
     @NotNull
     @Override
     public TokenSet getCommentTokens() {
-        return HJsonTokens.COMMENTARIES;
+        return HJsonTokens.comments;
     }
 
     @NotNull

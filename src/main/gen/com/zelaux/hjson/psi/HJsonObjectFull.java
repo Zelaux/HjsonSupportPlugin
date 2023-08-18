@@ -11,7 +11,7 @@ public interface HJsonObjectFull extends HJsonValue, HJsonObject {
   @NotNull
   List<HJsonMember> getMemberList();
 
-  HJsonMember findMember(@NotNull String name);
+  @Nullable HJsonMember findMember(@NotNull String name);
 
   @Nullable ItemPresentation getPresentation();
 

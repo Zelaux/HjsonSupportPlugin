@@ -235,20 +235,26 @@ public class HJsonPsiImplUtils {
         String[] lines = myText.split("\n");
         int newLen = lines.length;
         int startOffset = 1;
-        if (lines.length > 0 && lines[lines.length - 1].matches("\\s*'''")) {
+//        int startOffset2 = 1;
+        int isEmptyEnd=0;
+        int isEmptyStart=0;
+        if (lines.length > 0 && lines[lines.length - 1].length()-lineOffset<=3) {
             newLen -= 1;
+            isEmptyEnd++;
         }
         if (lines.length > 1 && lines[0].equals("'''")) {
             newLen -= 1;
+            isEmptyStart++;
+//            startOffset2--;
+            startOffset--;
 //            startOffset = 0;
         }
         String[] newLines = new String[newLen];
-
-        if (startOffset == 1) {
+        if(isEmptyStart==0){
             newLines[0] = lines[0].substring(3);
         }
-        for (int i = 0; i < newLines.length; i++) {
-            String line = lines[i + startOffset];
+        for (int i = 1-isEmptyStart; i < newLines.length; i++) {
+            String line = lines[i+isEmptyStart];
             Matcher matcher = nonSpacePattern.matcher(line);
             int foundIndex = line.length() - 1;
             if (matcher.find()) {
@@ -258,7 +264,7 @@ public class HJsonPsiImplUtils {
             }
             int endIndex = line.length();
             int startIndex = Math.min(lineOffset, foundIndex);
-            boolean isLast = i + 1 == lines.length;
+            boolean isLast = i + 1 == newLines.length;
             if (isLast && line.endsWith("'''")) {
                 endIndex -= 3;
                 if (startIndex == endIndex) continue;

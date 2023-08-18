@@ -1,0 +1,155 @@
+HJson Puzzler#1
+```
+it: it: it: it
+```
+Answer: 
+```json
+{"it": "it: it: it"}
+```
+
+HJson Puzzler#2
+```
+it: it,
+value: value,
+```
+Answer: 
+```json
+{"it": "it,", "value": "value,"}
+```
+
+HJson Puzzler#3
+```
+[
+1, 2,
+O, T,
+3, 4,
+T, F
+]
+```
+Answer: 
+```json
+[1, 2, "O, T,", 3, 4, "T, F"]
+```
+
+HJson Puzzler#4
+```
+a b: c
+```
+Answer: 
+```json
+"a b: c"
+```
+
+HJson Puzzler#4.1
+```
+{
+a b: c
+}
+```
+Answer: 
+```json
+{"a b": "c"}
+```
+
+HJson Puzzler#5
+```
+field: '''
+        abc
+        def
+        '''
+```
+Answer: 
+```json
+{"field": " abc\n def\n "}
+```
+
+HJson Puzzler#7
+```
+1/*aaaa*/: 1
+```
+Answer: 
+```json
+{"1/*aaaa*/": 1}
+```
+
+HJson Puzzler#7.1
+```
+1/*aaaa*/1
+```
+Answer: 
+Do not compile
+
+HJson Puzzler#7.2
+```
+d/*aaaa*/1
+```
+Answer: 
+```json
+"d/*aaaa*/1"
+```
+
+HJson Puzzler#7.3
+```
+d1 /*aaaa*/
+```
+Answer: 
+```json
+"d1 /*aaaa*/"
+```
+
+HJson Puzzler#7.4
+```
+/*aaaa*/d1
+```
+Answer: 
+```json
+"d1"
+```
+
+HJson Puzzler#8
+```
+[
+1/*dddd*/1
+]
+```
+Answer: 
+```json
+[1, 1]
+```
+
+HJson Puzzler#8.1
+```
+[
+1 1
+]
+```
+Answer: 
+```json
+["1 1"]
+```
+
+HJson Puzzler#9
+```
+a: {
+  true: d
+}
+b: [
+  true: d
+]
+```
+Answer: 
+```json
+{"a": {"true": "d"}, "b": ["true: d"]}
+```
+
+HJson Puzzler#10
+```
+[
+"1" "1" "1"
+]
+```
+Answer: 
+```json
+["1", "1", "1"]
+```
+

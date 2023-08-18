@@ -11,6 +11,7 @@ import static com.zelaux.hjson.lexer.LexerResultEntry.entry;
 
 public class HJsonRangedLexerTest {
     static final RangedTestCase[] cases = {
+            test("{0: zero}", 1, 2),
             test("{0: zero}", 1, 2,
                     entry(HJsonElementTypes.MEMBER_NAME, "0", 1, 2)),
             test("{0: zero[: 0\n1: one: 1\n}", 16, 22),
@@ -53,7 +54,7 @@ public class HJsonRangedLexerTest {
                 lexer.advance();
             }
             if (i < entries.length)
-                Assert.fail("Missing tokens " + (entries.length - i - 1) + "(" + rangedTestCase.data + ")");
+                Assert.fail("Missing tokens " + (entries.length - i ) + "(" + rangedTestCase.data + ")");
             System.out.println("end");
         }
 

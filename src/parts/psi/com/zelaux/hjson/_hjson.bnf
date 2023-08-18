@@ -88,7 +88,7 @@ object::=(member (COMMA? member)* COMMA?)?{
   mixin="com.zelaux.hjson.psi.impl.HJsonObjectMixin"
 }
 member::= MEMBER_NAME  COLON? member_value?{
-  pin=1
+  //pin=1
   methods=[
     getName
     getValue
