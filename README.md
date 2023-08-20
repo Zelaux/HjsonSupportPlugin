@@ -1,4 +1,4 @@
-![pluginIcon.svg](src%2Fmain%2Fresources%2FMETA-INF%2FpluginIcon.svg)
+<img src="src%2Fmain%2Fresources%2FMETA-INF%2FpluginIcon.svg" width="128" height="128" />
 # HJson
 
 [![Version](https://img.shields.io/jetbrains/plugin/v/22501-hjson.svg)](https://plugins.jetbrains.com/plugin/22501-hjson)
