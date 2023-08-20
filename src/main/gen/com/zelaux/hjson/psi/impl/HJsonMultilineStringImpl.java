@@ -33,4 +33,14 @@ public class HJsonMultilineStringImpl extends HJsonStringLiteralImpl implements 
     return findNotNullChildByType(MULTILINE_STRING_TOKEN);
   }
 
+  @Override
+  public String[] getLines() {
+    return HJsonPsiImplUtils.getLines(this);
+  }
+
+  @Override
+  public int getIndent() {
+    return HJsonPsiImplUtils.getIndent(this);
+  }
+
 }

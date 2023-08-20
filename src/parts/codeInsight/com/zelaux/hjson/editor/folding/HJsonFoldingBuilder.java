@@ -7,11 +7,13 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.zelaux.hjson.HJsonElementTypes;
 import com.zelaux.hjson.psi.*;
 import com.zelaux.hjson.psi.impl.HJsonPsiImplUtils;
+import io.netty.util.internal.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -117,18 +119,34 @@ public class HJsonFoldingBuilder implements FoldingBuilder, DumbAware {
         } else if (type == HJsonElementTypes.BLOCK_COMMENT_TOKEN) {
             return "/*...*/";
         } else if (type == HJsonElementTypes.MULTILINE_STRING_TOKEN) {
-            int startOffset = node.getStartOffset();
-            ASTNode parent = node;
-            while (parent.getTreeParent() != null) {
-                parent = parent.getTreeParent();
+            String nodeText = node.getText();
+            LineTokenizer tokenizer = new LineTokenizer(nodeText);
+            if (tokenizer.atEnd() || nodeText.matches("'''(''')?")) {
+                return "''''''";
+            } else if (nodeText.matches("'''\\s+(''')?")) {
+                return "'''...'''";
             }
-            String myText = HJsonPsiImplUtils.getMultilineString(parent.getText(), startOffset, node.getText());
-            int i = myText.indexOf('\n');
-            if (i != -1) {
-                String s = "'''";
-                return s + myText.substring(0, i) + "..." + s;
+            int startOffset = tokenizer.getOffset();
+            if (tokenizer.getLength() <= 3) {
+                tokenizer.advance();
+                startOffset=tokenizer.getOffset();
+            } else {
+                startOffset += 3;
             }
-            return "'''" + myText + "'''";
+            int endOffset = tokenizer.getOffset() + tokenizer.getLength();
+            for (int i = 0; i < 3; i++) {
+                if (endOffset - i <= startOffset) break;
+                if (nodeText.charAt(endOffset - i) != '\'') break;
+                if (i == 2) {
+                    endOffset -= 3;
+                }
+            }
+            String middleText = nodeText.substring(startOffset, endOffset);
+            tokenizer.advance();
+            if (!tokenizer.atEnd() && (tokenizer.getOffset() + tokenizer.getLength() < nodeText.length() || !nodeText.endsWith("'''"))) {
+                return "'''" + middleText + "...'''";
+            }
+            return "'''" + middleText + "'''";
         }
         return "...";
     }

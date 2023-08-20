@@ -1,8 +1,7 @@
-package com.zelaux.hjson.puzzlers;
+package com.zelaux.hjson.hjsonDataTests;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testFramework.ParsingTestCase;
 import com.zelaux.hjson.HJsonParserDefinition;
@@ -26,7 +25,7 @@ public class PuzzlerTest extends ParsingTestCase {
 
     @Override
     protected String getTestDataPath() {
-        return "src/test/testData/puzzlers";
+        return "src/test/testData/hjsonData";
     }
 
     @Test

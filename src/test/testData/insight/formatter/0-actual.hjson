@@ -27,7 +27,7 @@ name: {
 field: 123
 field2: '''
         multiline1
-        multiline2
+         multiline2
         multiline3
         '''
 array: [
@@ -36,5 +36,7 @@ array: [
   dawd,'ddawd'
   '''
   multiline
+  multiline1
+   multiline2
   '''
 ]

@@ -9,22 +9,7 @@ public class MultilineParserTest {
     @Test
     public void testMultilineParser() {
         String[][] cases = {
-                {
-                         "field: '''\n       a\n       b'''",
-                        "a\nb"
-                },
-                {
-                         "field: '''\n        a\n        b'''",
-                        " a\n b"
-                },
-                {
-                        "field: '''a\n        b'''",
-                        "a\n b"
-                },
-                {
-                        "field: '''a\n       b\n       '''",
-                        "a\nb"
-                },
+
         };
         int offset = "field: ".length();
         for (int i = 0; i < cases.length; i++) {

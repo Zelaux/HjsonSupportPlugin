@@ -2,6 +2,7 @@ package com.zelaux.hjson.psi;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
@@ -149,17 +150,21 @@ public class HJsonPsiUtil {
      */
     @NotNull
     public static String stripQuotes(@NotNull String text) {
+        return inTextRangeWithoutQuotes(text).substring(text);
+    }
+    @NotNull
+    public static TextRange inTextRangeWithoutQuotes(@NotNull String text) {
         if (text.length() > 0) {
             final char firstChar = text.charAt(0);
             final char lastChar = text.charAt(text.length() - 1);
             if (firstChar == '\'' || firstChar == '"') {
                 if (text.length() > 1 && firstChar == lastChar && !isEscapedChar(text, text.length() - 1)) {
-                    return text.substring(1, text.length() - 1);
+                    return new TextRange(1, text.length() - 1);
                 }
-                return text.substring(1);
+                return new TextRange(1,text.length());
             }
         }
-        return text;
+        return new TextRange(0,text.length());
     }
 
     /**
@@ -192,7 +197,7 @@ public class HJsonPsiUtil {
             final HJsonMember lastProperty = ContainerUtil.getLastItem(propertyList);
             if (lastProperty != null) {
                 final PsiElement addedProperty = object.addAfter(property, lastProperty);
-                object.addBefore(new HJsonFactory(object.getProject()).createComma(), addedProperty);
+                object.addBefore(HJsonFactory.getInstance(object.getProject()).createComma(), addedProperty);
                 return addedProperty;
             }
         }
@@ -200,7 +205,7 @@ public class HJsonPsiUtil {
         assert hasElementType(leftBrace, HJsonElementTypes.L_CURLY);
         final PsiElement addedProperty = object.addAfter(property, leftBrace);
         if (!propertyList.isEmpty()) {
-            object.addAfter(new HJsonFactory(object.getProject()).createComma(), addedProperty);
+            object.addAfter(HJsonFactory.getInstance(object.getProject()).createComma(), addedProperty);
         }
         return addedProperty;
     }

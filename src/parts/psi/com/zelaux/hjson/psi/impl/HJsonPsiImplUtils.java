@@ -9,7 +9,9 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.PlatformIcons;
 import com.zelaux.hjson.HJsonLanguage;
@@ -26,7 +28,7 @@ import java.util.regex.Pattern;
 
 public class HJsonPsiImplUtils {
     static final Key<List<Pair<TextRange, String>>> STRING_FRAGMENTS = new Key<>("JSON string fragments");
-    static final Pattern nonSpacePattern = Pattern.compile("[^ ]");
+    public static final Pattern nonSpacePattern = Pattern.compile("[^ ]");
     private static final String ourEscapesTable = "\"\"\\\\//b\bf\fn\nr\rt\t";
 
     @NotNull
@@ -35,34 +37,7 @@ public class HJsonPsiImplUtils {
         return StringUtil.unescapeStringCharacters(HJsonPsiUtil.stripQuotes(text));
     }
 
-/*    @NotNull
-    public static String getName(@NotNull HJsonMemberName memberName) {
-        HJsonJsonString jsonString = memberName.getJsonString();
-        String text;
-        if (jsonString == null) {
-            text = memberName.getMemberNameToken().getText();
-        } else {
-            text = jsonString.getText();
-        }
-        return StringUtil.unescapeStringCharacters(HJsonPsiUtil.stripQuotes(text));
-    }*/
 
-    /*
-     */
-
-    /**
-     * Actually only JSON string literal should be accepted as valid name of property according to standard,
-     * but for compatibility with JavaScript integration any JSON literals as well as identifiers (unquoted words)
-     * are possible and highlighted as error later.
-     *
-     * @see JsonStandardComplianceInspection
-     *//*
-    @NotNull
-    public static HJsonStringLiteral getNameElement(@NotNull HJsonMemberName property) {
-        final PsiElement firstChild = property.getFirstChild();
-        assert firstChild instanceof HJsonStringLiteral;
-        return (HJsonStringLiteral) firstChild;
-    }*/
     @Nullable
     public static HJsonValue getValue(@NotNull HJsonMember property) {
         HJsonMemberValue memberValue = property.getMemberValue();
@@ -218,61 +193,105 @@ public class HJsonPsiImplUtils {
     @NotNull
     public static String getValue(@NotNull HJsonStringLiteral literal) {
         if (literal instanceof HJsonMultilineString) {
-            PsiFile file = literal.getContainingFile();
-
-            if (file != null) {
-                return getMultilineString(file.getText(), literal.getTextOffset(), literal.getText());
-            }
+            return String.join("\n",getLines((HJsonMultilineString) literal));
 
         }
         return StringUtil.unescapeStringCharacters(HJsonPsiUtil.stripQuotes(literal.getText()));
 
     }
 
+    public static String[] getLines(@NotNull PsiElement string) {
+        PsiElement file = findRootNode(string);
+        return getMultilineStringLines(file.getText(), string.getTextOffset(), string.getText());
+    }
+
+    @NotNull
+    private static PsiElement findRootNode(@NotNull PsiElement string) {
+        PsiElement file = string.getContainingFile();
+
+        if (file == null) {
+            file= string;
+            while (file.getParent()!=null && !(file instanceof PsiFile)){
+                file=file.getParent();
+            }
+        }
+        return file;
+    }
+
+    @NotNull
+    public static ArrayList<TextRange> getMultilineContentRanges(String fileText, int offset, String myText, boolean includeLineSeparators) {
+        int lineIndent = offset - StringUtil.lastIndexOf(fileText, '\n', 0, offset) - 1;
+        LineTokenizer lineTokenizer = new LineTokenizer(myText);
+        ArrayList<TextRange> ranges = new ArrayList<>();
+
+        while (!lineTokenizer.atEnd()) {
+            int lineStart = lineTokenizer.getOffset();
+            int lineLength = lineTokenizer.getLength();
+            int lineEnd = lineStart + lineLength;
+            int lineSeparatorLength = lineTokenizer.getLineSeparatorLength();
+
+            handle:
+            {
+
+
+                int startIndex;
+
+                int endIndex = lineEnd;
+                if (lineStart == 0) {
+                    if (lineLength <= 3) break handle;
+                    startIndex = 3;
+                } else{
+                    Matcher matcher = nonSpacePattern.matcher(myText);
+                    int foundIndex = lineEnd - 1;
+                    if (matcher.find(lineStart) && matcher.end() <= lineEnd) {
+                        foundIndex = matcher.start();
+                    } else if (lineLength == 0) {
+                        foundIndex = lineStart;
+                    }
+                    startIndex = Math.min(lineIndent + lineStart, foundIndex);
+                }
+                boolean isLast = lineEnd == myText.length();
+                if (isLast && myText.endsWith("'''")) {
+                    endIndex -= 3;
+                    if (startIndex == endIndex && ranges.size() > 0) break handle;
+                } else {
+                    if (includeLineSeparators) {
+                        endIndex += lineSeparatorLength;
+                    }
+                }
+
+                ranges.add(new TextRange(startIndex, endIndex));
+            }
+            lineTokenizer.advance();
+        }
+        return ranges;
+    }
+
+    public static ArrayList<TextRange> getMultiLineRanges(PsiElement psi,boolean includeLineSeparators) {
+        return getMultilineContentRanges(findRootNode(psi).getText(),psi.getTextOffset(),psi.getText(),includeLineSeparators);
+    }
     @NotNull
     public static String getMultilineString(String fileText, int offset, String myText) {
-        int lineOffset = offset - StringUtil.lastIndexOf(fileText, '\n', 0, offset) - 1;
-        String[] lines = myText.split("\n");
-        int newLen = lines.length;
-        int startOffset = 1;
-//        int startOffset2 = 1;
-        int isEmptyEnd=0;
-        int isEmptyStart=0;
-        if (lines.length > 0 && lines[lines.length - 1].length()-lineOffset<=3) {
-            newLen -= 1;
-            isEmptyEnd++;
-        }
-        if (lines.length > 1 && lines[0].equals("'''")) {
-            newLen -= 1;
-            isEmptyStart++;
-//            startOffset2--;
-            startOffset--;
-//            startOffset = 0;
-        }
-        String[] newLines = new String[newLen];
-        if(isEmptyStart==0){
-            newLines[0] = lines[0].substring(3);
-        }
-        for (int i = 1-isEmptyStart; i < newLines.length; i++) {
-            String line = lines[i+isEmptyStart];
-            Matcher matcher = nonSpacePattern.matcher(line);
-            int foundIndex = line.length() - 1;
-            if (matcher.find()) {
-                foundIndex = matcher.start();
-            } else if(line.length()==0){
-                foundIndex=0;
-            }
-            int endIndex = line.length();
-            int startIndex = Math.min(lineOffset, foundIndex);
-            boolean isLast = i + 1 == newLines.length;
-            if (isLast && line.endsWith("'''")) {
-                endIndex -= 3;
-                if (startIndex == endIndex) continue;
-            }
-            newLines[i] = line.substring(startIndex, endIndex);
-
-        }
+        String[] newLines = getMultilineStringLines(fileText, offset, myText);
         return String.join("\n", newLines);
+    }
+    public static int getIndent(HJsonMultilineString multilineString){
+        return getIndent((PsiElement)multilineString);
+    }
+    public static int getIndent(PsiElement multilineString){
+        int offset = multilineString.getTextOffset();
+        PsiElement node = findRootNode(multilineString);
+        return offset - StringUtil.lastIndexOf(node.getText(), '\n', 0, offset) - 1;
+    }
+
+    @NotNull
+    public static String[] getMultilineStringLines(String fileText, int offset, String myText) {
+        ArrayList<TextRange> ranges = getMultilineContentRanges(fileText, offset, myText, false);
+        String[] newLines = new String[ranges.size()];
+        for (int i = 0; i < ranges.size(); i++) {
+            newLines[i] = ranges.get(i).substring(myText);
+        }
+        return newLines;
     }
 
     /*public static boolean isPropertyName(@NotNull HJsonStringLiteral literal) {
@@ -287,4 +306,5 @@ public class HJsonPsiImplUtils {
     public static double getValue(@NotNull HJsonNumberLiteral literal) {
         return Double.parseDouble(literal.getText());
     }
+
 }

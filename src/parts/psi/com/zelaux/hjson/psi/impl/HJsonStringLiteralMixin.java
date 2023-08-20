@@ -5,6 +5,9 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.LiteralTextEscaper;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.impl.source.tree.LeafElement;
+import com.intellij.psi.impl.source.tree.injected.StringLiteralEscaper;
+import com.zelaux.hjson.psi.HJsonMultilineString;
+import com.zelaux.hjson.psi.impl.tree.injected.MultilineStringLiteralEscaper;
 import org.jetbrains.annotations.NotNull;
 
 public class HJsonStringLiteralMixin extends HJsonLiteralImpl implements PsiLanguageInjectionHost {
@@ -28,12 +31,11 @@ public class HJsonStringLiteralMixin extends HJsonLiteralImpl implements PsiLang
     @NotNull
     @Override
     public LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper() {
-        return new JSStringLiteralEscaper<PsiLanguageInjectionHost>(this) {
-            @Override
-            protected boolean isRegExpLiteral() {
-                return false;
-            }
-        };
+        if(this instanceof HJsonMultilineString){
+            //noinspection rawtypes,unchecked
+            return new MultilineStringLiteralEscaper((HJsonMultilineString) this);
+        }
+        return new StringLiteralEscaper<>(this);
     }
 
     @Override

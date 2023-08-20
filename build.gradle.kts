@@ -8,7 +8,7 @@ plugins {
 val arcVersion = "v141.1"
 
 group = "com.github.Zelaux"
-version = "1.1.0"
+version = "1.2.0"
 
 repositories {
     mavenCentral()
@@ -56,8 +56,9 @@ tasks {
     }
     // Set the JVM compatibility versions
     withType<JavaCompile> {
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
+        sourceCompatibility = "16"
+        targetCompatibility = "16"
+//        langua
 
 
         val compilerArgs = options.compilerArgs

@@ -111,6 +111,9 @@ member_value::=value
 array::= '['( value COMMA? )* ']'?{
 //  recoverWhile = not_bracket_or_next_value
     //pin=1
+    methods=[
+        getPresentation
+    ]
 }
 
 number_literal ::=  NUMBER_TOKEN  {
@@ -141,7 +144,12 @@ string_literal::=json_string | quoteless_string|multiline_string{
 
 quoteless_string::=QUOTELESS_STRING_TOKEN
 
-multiline_string::= MULTILINE_STRING_TOKEN
+multiline_string::= MULTILINE_STRING_TOKEN{
+    methods=[
+        getLines
+        getIndent
+    ]
+}
 json_string::=DOUBLE_QUOTED_STRING_TOKEN | SINGLE_QUOTED_STRING_TOKEN
 
 //special_letter::=JSON_STRING_SPECIAL_LETTER

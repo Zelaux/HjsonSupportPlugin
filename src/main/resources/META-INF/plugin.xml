@@ -19,6 +19,7 @@
 <!--    <xi:include href="/META-INF/description.xml"  xpointer="xpointer(/idea-plugin/*)"/>-->
 
     <depends>com.intellij.modules.lang</depends>
+    <depends>org.intellij.intelliLang</depends>
     <xi:include href="/META-INF/inspectionsAndActions.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
     <extensions defaultExtensionNs="com.intellij.lang">
@@ -33,6 +34,7 @@
         <langCodeStyleSettingsProvider implementation="com.zelaux.hjson.formatter.HJsonLanguageCodeStyleSettingsProvider"/>
         <lang.formatter language="HJSON" implementationClass="com.zelaux.hjson.formatter.HJsonFormattingBuilderModel"/>
         <preFormatProcessor implementation="com.zelaux.hjson.formatter.comma.HJsonCommaAdderProcessor"/>
+        <preFormatProcessor implementation="com.zelaux.hjson.formatter.multiline.MultilineStringPreProcessor"/>
         <postFormatProcessor implementation="com.zelaux.hjson.formatter.comma.HJsonCommaRemoverProcessor"/>
         <postFormatProcessor implementation="com.zelaux.hjson.formatter.multiline.MultilineStringPostProcessor"/>
         <lang.braceMatcher  language="HJSON" implementationClass="com.zelaux.hjson.HJsonBraceMatcher"/>
@@ -42,7 +44,7 @@
         <breadcrumbsInfoProvider implementation="com.zelaux.hjson.breadcrumbs.HJsonBreadcrumbsProvider"/>
         <!--TODO QUALIFIED NAME-->
         <completion.contributor language="HJSON" id="HJsonCompletionContributor" order="last" implementationClass="com.zelaux.hjson.codeinsight.HJsonCompletionContributor"/>
-        <!--TODO    <lang.psiStructureViewFactory language="JSON" implementationClass="com.intellij.json.structureView.JsonStructureViewBuilderFactory"/>-->
+        <lang.psiStructureViewFactory language="HJSON" implementationClass="com.zelaux.hjson.structureView.HJsonStructureViewBuilderFactory"/>
         <lang.foldingBuilder language="HJSON" implementationClass="com.zelaux.hjson.editor.folding.HJsonFoldingBuilder"/>
         <lang.smartEnterProcessor language="HJSON" implementationClass="com.zelaux.hjson.editor.smartEnter.HJsonSmartEnterProcessor"/>
         <lang.namesValidator language="HJSON" implementationClass="com.zelaux.hjson.HJsonNamesValidator"/>
@@ -62,7 +64,11 @@
         <!-- Inspections -->
 
         <!--Other-->
-        <!--TODO <lang.elementManipulator forClass="com.zelaux.hjson.psi.HJsonStringLiteral" implementationClass="com.zelaux.hjson.psi.HJsonStringLiteralManipulator"/>-->
+        <lang.elementManipulator forClass="com.zelaux.hjson.psi.HJsonJsonString" implementationClass="com.zelaux.hjson.psi.HJsonStringLiteralManipulator"/>
+        <lang.elementManipulator forClass="com.zelaux.hjson.psi.HJsonQuotelessString" implementationClass="com.zelaux.hjson.psi.HJsonStringLiteralManipulator"/>
+        <lang.elementManipulator forClass="com.zelaux.hjson.psi.HJsonMultilineString" implementationClass="com.zelaux.hjson.psi.HJsonMultilineStringLiteralManipulator"/>
+
+        <languageInjectionPerformer language="HJSON" implementationClass="com.zelaux.hjson.injection.HJsonInjectionPerformer"/>
         <lang.lineWrapStrategy language="HJSON" implementationClass="com.zelaux.hjson.formatter.HJsonLineWrapPositionStrategy"/>
         <copyPastePostProcessor implementation="com.zelaux.hjson.editor.HJsonCopyPastePostProcessor"/>
         <highlightVisitor implementation="com.zelaux.hjson.highlighting.HJsonRainbowVisitor"/>

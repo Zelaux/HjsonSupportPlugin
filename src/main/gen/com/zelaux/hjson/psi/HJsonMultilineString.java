@@ -10,4 +10,8 @@ public interface HJsonMultilineString extends HJsonStringLiteral {
   @NotNull
   PsiElement getMultilineStringToken();
 
+  String[] getLines();
+
+  int getIndent();
+
 }

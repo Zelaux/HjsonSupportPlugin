@@ -3,8 +3,10 @@ package com.zelaux.hjson.inspections;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.application.WriteAction;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.zelaux.hjson.HJsonBundle;
@@ -26,12 +28,16 @@ public class HJsonMemberNameValidator extends LocalInspectionTool {
             @Override
             public void visitMember(@NotNull HJsonMember o) {
                 PsiElement memberName = o.getMemberName();
-                Matcher matcher = spacePattern.matcher(memberName.getText());
-                while (matcher.find()) {
-                    holder.registerProblem(memberName, new TextRange(matcher.start(), matcher.end()), "Member name cannot contains spaces",
-                            new ToString(true),
-                            new ToString(false)
-                    );
+                String text = memberName.getText();
+                if(text.charAt(0)!='\'' && text.charAt(0)!='"') {
+                    Matcher matcher = spacePattern.matcher(text);
+                    while (matcher.find()) {
+                        holder.registerProblem(memberName, new TextRange(matcher.start(), matcher.end()),
+                                HJsonBundle.message("syntax.error.spaces-in-member-name"),
+                                new ToString(true),
+                                new ToString(false)
+                        );
+                    }
                 }
                 super.visitMember(o);
             }
@@ -60,9 +66,11 @@ public class HJsonMemberNameValidator extends LocalInspectionTool {
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
             PsiElement nameElement = descriptor.getPsiElement();
             String text = nameElement.getText();
-            HJsonJsonString newElement = HJsonFactory.getInstance(project).createJsonStringLiteral(quote, text);
-            WriteAction.run(() -> {
-                nameElement.replace(newElement);
+//            HJsonJsonString newElement = HJsonFactory.getInstance(project).createJsonStringLiteral(quote, text);
+            Document document = PsiDocumentManager.getInstance(project).getDocument(nameElement.getContainingFile());
+           if(document!=null) WriteAction.run(() -> {
+                document.replaceString(nameElement.getTextOffset(),nameElement.getTextOffset()+nameElement.getTextLength(),quote+text+quote);
+//                nameElement.replace(newElement);
             });
         }
     }

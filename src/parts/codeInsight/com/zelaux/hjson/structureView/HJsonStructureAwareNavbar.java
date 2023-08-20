@@ -2,7 +2,10 @@ package com.zelaux.hjson.structureView;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.navigationToolbar.StructureAwareNavBarModelExtension;
+import com.intellij.json.JsonBundle;
 import com.intellij.lang.Language;
+import com.intellij.psi.PsiElement;
+import com.zelaux.hjson.HJsonBundle;
 import com.zelaux.hjson.HJsonLanguage;
 import com.zelaux.hjson.psi.*;
 import com.zelaux.hjson.util.HJsonUtil;
@@ -31,6 +34,12 @@ public class HJsonStructureAwareNavbar extends StructureAwareNavBarModelExtensio
         if (HJsonUtil.isArrayElement(object)) {
             return "[" + HJsonUtil.getArrayIndexOfItem(object) + "]";
         }
+        if (object instanceof HJsonObject) {
+            return HJsonBundle.message("hjson.object");
+        }
+        if (object instanceof HJsonArray) {
+            return HJsonBundle.message("hjson.array");
+        }
         if (object instanceof HJsonStringLiteral) {
             String value = ((HJsonStringLiteral) object).getValue();
             int i = value.indexOf('\n');
@@ -46,6 +55,8 @@ public class HJsonStructureAwareNavbar extends StructureAwareNavBarModelExtensio
 
         return null;
     }
+
+
 
     @Override
     @Nullable

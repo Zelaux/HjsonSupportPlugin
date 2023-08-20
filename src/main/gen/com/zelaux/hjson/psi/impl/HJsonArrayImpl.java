@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.zelaux.hjson.HJsonElementTypes.*;
 import com.zelaux.hjson.psi.*;
+import com.intellij.navigation.ItemPresentation;
 
 public class HJsonArrayImpl extends HJsonValueImpl implements HJsonArray {
 
@@ -31,6 +32,11 @@ public class HJsonArrayImpl extends HJsonValueImpl implements HJsonArray {
   @NotNull
   public List<HJsonValue> getValueList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, HJsonValue.class);
+  }
+
+  @Override
+  public @Nullable ItemPresentation getPresentation() {
+    return HJsonPsiImplUtils.getPresentation(this);
   }
 
 }

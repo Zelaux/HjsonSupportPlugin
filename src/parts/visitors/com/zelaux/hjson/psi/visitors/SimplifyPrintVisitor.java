@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class SimplifyPrintVisitor extends AbstractPrintVisitor {
 
     @SuppressWarnings("UnnecessaryUnicodeEscape")
-    final IndentStream stream = new IndentStream(super.stream, "\u0020\u0020");
+    final IndentStream stream = new IndentStream(super.stream, /*"\u0020\u0020"*/"");
 
 
     @Override
@@ -21,15 +21,18 @@ public class SimplifyPrintVisitor extends AbstractPrintVisitor {
     @Override
     public void visitStringLiteral(@NotNull HJsonStringLiteral o) {
         String value = o.getValue();
-        if(value.contains("\n")){
+        if (value.contains("\n")) {
+            if(o.getParent() instanceof HJsonMemberValue){
+                stream.println();
+            }
             stream.println("'''");
             for (String line : value.split("\n")) {
                 stream.println(line);
             }
             stream.print("'''");
-        }else if(value.matches(".*\\s")) {
+        } else if (value.matches(".*\\s")) {
             stream.print(o.getText());
-        } else{
+        } else {
             stream.print(value);
         }
     }
@@ -76,10 +79,12 @@ public class SimplifyPrintVisitor extends AbstractPrintVisitor {
     @Override
     public void visitMultilineString(@NotNull HJsonMultilineString o) {
 
-        String[] split = o.getValue().split("\n");
+        if(o.getParent() instanceof HJsonMemberValue){
+            stream.println();
+        }
         stream.println("'''");
-        for (int i = 0; i < split.length; i++) {
-            stream.println(split[i]);
+        for (String line : o.getLines()) {
+            stream.println(line);
         }
         stream.print("'''");
     }
@@ -105,7 +110,8 @@ public class SimplifyPrintVisitor extends AbstractPrintVisitor {
             stream.print(text);
         }
         stream.print(": ");
-        o.getValue().accept(this);
+        HJsonValue value = o.getValue();
+        if (value != null) value.accept(this);
     }
 
     @Override

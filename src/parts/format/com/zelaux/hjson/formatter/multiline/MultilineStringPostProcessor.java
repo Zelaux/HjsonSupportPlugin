@@ -9,7 +9,9 @@ import com.intellij.psi.impl.source.codeStyle.PostFormatProcessor;
 import com.zelaux.hjson.formatter.HJsonCodeStyleSettings;
 import com.zelaux.hjson.formatter.comma.HJsonCommaRemoverVisitor;
 import com.zelaux.hjson.formatter.style.CommaState;
+import com.zelaux.hjson.psi.HJsonArray;
 import com.zelaux.hjson.psi.HJsonFile;
+import com.zelaux.hjson.psi.HJsonMultilineString;
 import org.jetbrains.annotations.NotNull;
 
 public class MultilineStringPostProcessor implements PostFormatProcessor {

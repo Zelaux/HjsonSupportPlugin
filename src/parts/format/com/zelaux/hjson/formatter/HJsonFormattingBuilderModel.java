@@ -5,11 +5,8 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.zelaux.hjson.HJsonLanguage;
-import com.zelaux.hjson.psi.HJsonFile;
-import com.zelaux.hjson.psi.HJsonObject;
-import com.zelaux.hjson.psi.HJsonObjectFull;
+import com.zelaux.hjson.formatter.block.HJsonBlock;
 import org.jetbrains.annotations.NotNull;
 
 import static com.zelaux.hjson.HJsonElementTypes.*;

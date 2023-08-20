@@ -1,0 +1,26 @@
+{
+  1: [
+    "field: '''\n       a\n       b'''"
+    "{\"field\": \"a\\nb\"}"
+  ]
+  2: [
+    "field: '''\n        a\n        b'''"
+    "{\"field\": \" a\\n b\"}"
+  ]
+  3: [
+    "field: '''a\n        b'''"
+    "{\"field\": \"a\\n b\"}"
+  ]
+  4: [
+    "field: '''a\n       b\n       '''"
+    "{\"field\": \"a\\nb\"}"
+  ]
+  5: [
+    "field: '''ab'''"
+    "{\"field\": \"ab\"}"
+  ]
+  6: [
+    "field: '''\na\n\n'''"
+    "{\"field\": \"a\\n\"}"
+  ]
+}

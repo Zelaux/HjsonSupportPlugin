@@ -42,10 +42,7 @@ public class HJsonParser implements PsiParser, LightPsiParser {
   };
 
   /* ********************************************************** */
-  // '['( value COMMA? )* ']'?{
-  // //  recoverWhile = not_bracket_or_next_value
-  //     //pin=1
-  // }
+  // '['( value COMMA? )* ']'?
   public static boolean array(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "array")) return false;
     if (!nextTokenIs(b, L_BRACKET)) return false;
@@ -54,7 +51,6 @@ public class HJsonParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, L_BRACKET);
     r = r && array_1(b, l + 1);
     r = r && array_2(b, l + 1);
-    r = r && array_3(b, l + 1);
     exit_section_(b, m, ARRAY, r);
     return r;
   }
@@ -92,14 +88,6 @@ public class HJsonParser implements PsiParser, LightPsiParser {
   private static boolean array_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "array_2")) return false;
     consumeToken(b, R_BRACKET);
-    return true;
-  }
-
-  // {
-  // //  recoverWhile = not_bracket_or_next_value
-  //     //pin=1
-  // }
-  private static boolean array_3(PsiBuilder b, int l) {
     return true;
   }
 

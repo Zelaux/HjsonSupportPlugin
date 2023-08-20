@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class HJsonFactory {
     private final Project myProject;
 
-    public HJsonFactory(@NotNull Project project) {
+    private HJsonFactory(@NotNull Project project) {
         myProject = project;
     }
 
@@ -20,7 +20,7 @@ public class HJsonFactory {
     }
 
     /**
-     * Create lightweight in-memory {@link JsonFile} filled with {@code content}.
+     * Create lightweight in-memory {@link HJsonFile} filled with {@code content}.
      *
      * @param content content of the file to be created
      * @return created file
@@ -41,7 +41,7 @@ public class HJsonFactory {
      */
     @NotNull
     public <T extends HJsonValue> T createValue(@NotNull String content) {
-        final PsiFile file = createDummyFile("{\"foo\": " + content + "}");
+        final PsiFile file = createDummyFile("{f: " + content + "}");
         //noinspection unchecked,ConstantConditions
         return (T) file.getFirstChild().getFirstChild().getNextSibling().getLastChild().getLastChild();
     }

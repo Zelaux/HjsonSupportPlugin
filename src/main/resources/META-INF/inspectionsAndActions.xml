@@ -1,11 +1,22 @@
 <idea-plugin>
 
     <extensions defaultExtensionNs="com.intellij">
-<!--        <localInspection implementationClass="com.zelaux.hjson.inspections.HJsonMemberNameValidator" language="HJSON"/>-->
+        <localInspection language="HJSON" shortName="HJsonMemberNameValidator"
+                         bundle="messages.HJsonBundle" key="inspection.spaces-in-member-name.keys.name"
+                         groupKey="hjson.inspection.group"
+                         enabledByDefault="true" level="ERROR"
+                         implementationClass="com.zelaux.hjson.inspections.HJsonMemberNameValidator"/>
         <localInspection language="HJSON" shortName="HJsonDuplicatePropertyKeys"
-                         bundle="messages.HJsonBundle" key="inspection.duplicate.keys.name" groupKey="hjson.inspection.group"
+                         bundle="messages.HJsonBundle" key="inspection.duplicate.keys.name"
+                         groupKey="hjson.inspection.group"
                          enabledByDefault="true" level="WARNING"
-                implementationClass="com.zelaux.hjson.codeinsight.HJsonDuplicatePropertyKeysInspection"/>
+                         implementationClass="com.zelaux.hjson.codeinsight.HJsonDuplicatePropertyKeysInspection"/>
+        <localInspection language="HJSON" shortName="HJsonQuoteChecker"
+                         bundle="messages.HJsonBundle" key="inspection.unclosed-quotes.name"
+                         groupKey="hjson.inspection.group"
+                         enabledByDefault="true" level="ERROR"
+                         implementationClass="com.zelaux.hjson.inspections.QuoteChecker"/>
+<!--        <multiHostInjector implementation="com.zelaux.hjsonShema.impl.HJsonSchemaBasedLanguageInjector"/>-->
     </extensions>
     <actions>
         <action id="com.zelaux.hjson.actions.SimplifyCodeAction" class="com.zelaux.hjson.actions.SimplifyCodeAction"

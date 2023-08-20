@@ -4,6 +4,7 @@ import com.intellij.lang.impl.TokenSequence;
 import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.lexer.Lexer;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.TokenType;
@@ -14,11 +15,13 @@ import com.zelaux.hjson.lexer.DelegateLexer;
 import com.zelaux.hjson.lexer.HJsonFlexLexer;
 import com.zelaux.hjson.lexer.HJsonLexer;
 import com.zelaux.hjson.lexer.WrappedHJsonLexer;
+import com.zelaux.hjson.psi.impl.HJsonPsiImplUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 @SuppressWarnings({"UnstableApiUsage", "NewClassNamingConvention"})
 public class LexerPreview {
@@ -28,10 +31,9 @@ public class LexerPreview {
         Lexer lexer = lexer();
 //        System.out.println();
         String myText = FileUtil.loadFile(new File("src/test/testData/preview/lexer.txt"))
-                .replace("\r\n","\n")
-                ;
-        lexer.start(myText,0,myText.length(),2);
-        while (lexer.getTokenType()!=null){
+                .replace("\r\n", "\n");
+        lexer.start(myText, 0, myText.length(), 2);
+        while (lexer.getTokenType() != null) {
             IElementType type = lexer.getTokenType();
             int tokenStart = lexer.getTokenStart();
             int tokenEnd = lexer.getTokenEnd();

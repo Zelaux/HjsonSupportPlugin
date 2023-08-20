@@ -18,11 +18,6 @@ boolean2: true
 number: 013213e-1
 strings: [
   double_quoted
-  '''
-  new_multi1
-  new_multi2
-  new_multi3
-  '''
   single_quoted
   no qouted
 ]
@@ -37,8 +32,14 @@ array: [
   ddawd
   '''
   multiline1
-  multiline2
-  multiline3
+   multiline2
+   multiline3
   multiline4
   '''
 ]
+field: '''
+       multiline5
+        multiline6
+        multiline7
+       multiline8
+       '''
